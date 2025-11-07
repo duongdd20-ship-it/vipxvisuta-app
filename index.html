@@ -1,224 +1,247 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Vipxvisuta App 💖</title>
   <style>
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-    html, body {
-      width: 100%;
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-      color: #fff;
-      background-color: #000;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden}
+    /* INTRO overlay */
+    .intro{
+      position:fixed;inset:0;
+      background:url('intro.jpg') center/cover no-repeat;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:18px;z-index:40;transition:opacity 0.9s ease;
+    }
+    .intro.hidden{opacity:0;pointer-events:none}
+    .intro-photo{width:220px;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    .start-heart{
+      width:120px;height:120px;position:relative;cursor:pointer;
+      transform:rotate(-45deg);
+      background:radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
+      box-shadow:0 12px 30px rgba(255,90,140,0.35);
+      display:inline-block;
+    }
+    .start-heart::before,.start-heart::after{
+      content:"";position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
+      width:120px;height:120px;
+    }
+    .start-heart::before{top:-60px;left:0}
+    .start-heart::after{left:60px;top:0}
+    @keyframes pulse{0%{transform:scale(1) rotate(-45deg)}50%{transform:scale(1.08) rotate(-45deg)}100%{transform:scale(1) rotate(-45deg)}}
+    .start-heart{animation:pulse 1.5s infinite}
+
+    /* MAIN content (scrollable, snap) */
+    .main{
+      position:relative;
+      height:100vh;
+      opacity:0;transition:opacity .8s ease;
+      z-index:10;
+      display:block;
+    }
+    .main.visible{opacity:1}
+    .sections{
+      height:100vh;overflow-y:auto;scroll-behavior:smooth;
+      scroll-snap-type:y mandatory;
+    }
+    section{
+      min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;
+      background-size:cover;background-position:center;scroll-snap-align:start;
+      text-align:center;
+    }
+    h2{font-size:2.3rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.6)}
+    p{max-width:760px;font-size:1.15rem;line-height:1.6;text-shadow:1px 2px 10px rgba(0,0,0,0.5)}
+    .btn{margin-top:20px;padding:12px 26px;border-radius:24px;border:0;background:#fff;color:#222;font-weight:600;cursor:pointer}
+    .btn:hover{transform:translateY(-4px);transition:all .18s ease}
+
+    /* music toggle */
+    #music-toggle{position:fixed;top:18px;right:18px;z-index:50;background:rgba(255,255,255,0.9);border:0;border-radius:50%;width:46px;height:46px;font-size:18px;cursor:pointer}
+
+    /* floating hearts (end effect) */
+    .floating-heart{
+      position:fixed;font-size:28px;opacity:0;pointer-events:none;
+      animation:floatUp 2.4s ease forwards;
+    }
+    @keyframes floatUp{
+      0%{transform:translateY(40px) scale(.8);opacity:0}
+      20%{opacity:1}
+      100%{transform:translateY(-260px) scale(1.4);opacity:0}
     }
 
-    /* --- Intro --- */
-    .intro {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: #000 url('./intro.jpg') center/cover no-repeat;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 10;
-      transition: opacity 1.5s ease;
-    }
-
-    .intro.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .heart {
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle at 30% 30%, #ff4f8b, #ff1f5a);
-      position: relative;
-      transform: rotate(-45deg);
-      cursor: pointer;
-      animation: pulse 1.5s infinite;
-      box-shadow: 0 0 20px rgba(255, 100, 150, 0.6);
-    }
-
-    .heart::before, .heart::after {
-      content: "";
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle at 30% 30%, #ff4f8b, #ff1f5a);
-      border-radius: 50%;
-      position: absolute;
-    }
-    .heart::before { top: -60px; left: 0; }
-    .heart::after { left: 60px; top: 0; }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1) rotate(-45deg); }
-      50% { transform: scale(1.1) rotate(-45deg); }
-    }
-
-    .main {
-      opacity: 0;
-      transition: opacity 1.5s ease;
-    }
-
-    .main.visible {
-      opacity: 1;
-    }
-
-    section {
-      min-height: 100vh;
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h2 {
-      font-size: 2.4em;
-      margin-bottom: 15px;
-      text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-    }
-
-    p {
-      max-width: 600px;
-      font-size: 1.3em;
-      line-height: 1.7;
-      text-shadow: 1px 1px 8px rgba(0,0,0,0.6);
-    }
-
-    button {
-      margin-top: 30px;
-      padding: 12px 28px;
-      border: none;
-      border-radius: 25px;
-      background: rgba(255,255,255,0.9);
-      color: #333;
-      font-size: 1em;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    button:hover { transform: scale(1.08); }
-
-    /* Hiệu ứng trái tim bay */
-    .floating-heart {
-      position: fixed;
-      bottom: 50px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2em;
-      opacity: 0;
-      animation: floatUp 2.5s ease forwards;
-    }
-
-    @keyframes floatUp {
-      0% {opacity: 0; transform: translate(-50%, 50px) scale(0.8);}
-      50% {opacity: 1;}
-      100% {opacity: 0; transform: translate(-50%, -200px) scale(1.5);}
-    }
+    /* per-page backgrounds (change filenames if needed) */
+    #s1{background-image:url('mission.jpg')}
+    #s2{background-image:url('emotion.JPG')}
+    #s3{background-image:url('agree.jpg')}
+    #s4{background-image:url('photo.jpg')} /* nếu muốn trang 4 là ảnh khác */
   </style>
 </head>
 <body>
 
-  <!-- Nhạc nền -->
-  <audio id="bgMusic" loop preload="auto">
+  <!-- audio (use your uploaded GitHub raw link or catbox link) -->
+  <audio id="bgAudio" preload="auto" loop>
     <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Màn hình intro -->
-  <div class="intro" id="intro">
-    <div class="heart" id="startHeart"></div>
-    <p style="margin-top:20px;font-size:1.2em;">Bấm vào trái tim để bắt đầu 💖</p>
+  <!-- music toggle -->
+  <button id="music-toggle" aria-label="nhac">🔈</button>
+
+  <!-- INTRO overlay -->
+  <div id="intro" class="intro" role="dialog" aria-label="Màn hình mở đầu">
+    <!-- optional photo: change filename 'photo.jpg' if you uploaded different -->
+    <img id="introPhoto" class="intro-photo" src="photo.jpg" alt="Hình kỷ niệm" onerror="this.style.display='none'">
+    <div id="startHeart" class="start-heart" title="Bấm để bắt đầu" role="button" aria-pressed="false"></div>
+    <div style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Bấm trái tim để mở thiệp</div>
   </div>
 
-  <!-- Nội dung chính -->
-  <div class="main" id="mainContent">
-    <section style="background-image:url('mission.jpg');">
-      <h2>💌 Nhiệm vụ đặc biệt</h2>
-      <p><!-- 💬 Sửa nội dung này -->  
-        Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L<br>
-        Hoàn thành nhiệm vụ bằng cách cùng anh đi ăn tối ngày 14/11 nhé 💕
-      </p>
-      <button onclick="scrollToNext(1)">Tiếp tục ➡️</button>
-    </section>
+  <!-- MAIN content -->
+  <div id="main" class="main" aria-hidden="true">
+    <div class="sections" id="sections">
+      <!-- Section 1: nhiệm vụ -->
+      <section id="s1">
+        <h2><!-- EDIT TITLE: S1 -->💌 Nhiệm vụ đặc biệt</h2>
+        <p><!-- EDIT TEXT: S1 -->Mã nhiệm vụ: <strong>I.M.D. S.P.E.C.I.A.L</strong><br>
+          Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕
+        </p>
+        <button class="btn" data-next="1">Tiếp tục</button>
+      </section>
 
-    <section style="background-image:url('emotion.JPG');">
-      <h2>🐱 Cảm xúc</h2>
-      <p><!-- 💬 Sửa cảm xúc riêng của cậu -->  
-        (Cậu viết cảm xúc của mình vào đây — ví dụ: “Anh không ngờ có ngày em lại khiến anh cười nhiều đến vậy...”)
-      </p>
-      <button onclick="scrollToNext(2)">Tiếp tục ➡️</button>
-    </section>
+      <!-- Section 2: cảm xúc -->
+      <section id="s2">
+        <h2><!-- EDIT TITLE: S2 -->🐱 Cảm xúc</h2>
+        <p><!-- EDIT TEXT: S2 -->(Ghi cảm xúc của bạn vào đây — ví dụ: "Khi đọc lời mời, tim anh rung...")</p>
+        <button class="btn" data-next="2">Tiếp tục</button>
+      </section>
 
-    <section style="background-image:url('agree.jpg');">
-      <h2>🐍 Lời đồng ý</h2>
-      <p><!-- 💬 Sửa lời đồng ý riêng -->  
-        Anh đồng ý rồi đó nha 💖 Hẹn em tối 14/11, cùng nhau hoàn thành nhiệm vụ nhé 🌙
-      </p>
-      <button onclick="scrollToNext(3)">Tiếp tục ➡️</button>
-    </section>
+      <!-- Section 3: lời đồng ý -->
+      <section id="s3">
+        <h2><!-- EDIT TITLE: S3 -->🐍 Lời đồng ý</h2>
+        <p><!-- EDIT TEXT: S3 -->Anh đồng ý nhé 💖 Hẹn em tối 14/11.</p>
+        <button class="btn" data-next="3">Tiếp tục</button>
+      </section>
 
-    <section style="background-image:url('agree.jpg');">
-      <h2>🌹 Lời chúc & Kết</h2>
-      <p><!-- 💬 Viết lời chúc hoặc điều muốn nói cuối cùng -->  
-        (Cậu có thể viết lời chúc sức khỏe, lời cảm ơn, hay điều muốn nói ở đây 💗)
-      </p>
-      <button onclick="showHearts()">💞 Gửi tim 💞</button>
-      <button onclick="restartApp()">🔁 Quay lại từ đầu</button>
-    </section>
+      <!-- Section 4: lời chúc / kết -->
+      <section id="s4">
+        <h2><!-- EDIT TITLE: S4 -->🌹 Lời chúc & Kết</h2>
+        <p><!-- EDIT TEXT: S4 -->(Viết lời chúc của bạn ở đây — ví dụ: "Chúc em luôn khỏe, vui, và hạnh phúc")</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
+          <button class="btn" id="heartBtn">💞 Gửi tim</button>
+          <button class="btn" id="restartBtn">🔁 Quay lại từ đầu</button>
+        </div>
+      </section>
+    </div>
   </div>
 
   <script>
-    const heart = document.getElementById('startHeart');
+    // Elements
     const intro = document.getElementById('intro');
-    const main = document.getElementById('mainContent');
-    const music = document.getElementById('bgMusic');
+    const startHeart = document.getElementById('startHeart');
+    const main = document.getElementById('main');
+    const sectionsEl = document.getElementById('sections');
+    const audioEl = document.getElementById('bgAudio');
+    const musicToggle = document.getElementById('music-toggle');
+    const restartBtn = document.getElementById('restartBtn');
+    const heartBtn = document.getElementById('heartBtn');
 
-    heart.addEventListener('click', () => {
-      heart.style.animation = "pulse 0.4s ease";
-      setTimeout(() => {
-        intro.classList.add('hidden');
-        main.classList.add('visible');
-        music.currentTime = 0;
-        music.play().catch(()=>console.log("Autoplay blocked"));
-      }, 1000);
+    let started = false;
+    let musicOn = false;
+
+    // Start behavior: click heart to open
+    startHeart.addEventListener('click', () => {
+      // small visual feedback
+      startHeart.style.transform = 'scale(1.05) rotate(-45deg)';
+      setTimeout(() => startHeart.style.transform = '', 200);
+
+      // hide intro, show main
+      intro.classList.add('hidden');
+      main.classList.add('visible');
+      main.setAttribute('aria-hidden','false');
+
+      // reset scroll to top of sections
+      sectionsEl.scrollTop = 0;
+
+      // attempt to play music - browsers may require user gesture (we have it)
+      audioEl.currentTime = 0;
+      audioEl.play().then(()=> {
+        musicOn = true;
+        musicToggle.textContent = '🔊';
+      }).catch(()=> {
+        musicOn = false;
+        musicToggle.textContent = '🔈';
+      });
+
+      started = true;
     });
 
-    function scrollToNext(i) {
-      const sections = document.querySelectorAll("section");
-      if (sections[i]) {
-        sections[i].scrollIntoView({ behavior: "smooth" });
+    // Buttons "Tiếp tục" scroll to next section (smooth)
+    document.querySelectorAll('.btn[data-next]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        const idx = Number(btn.getAttribute('data-next'));
+        const sections = document.querySelectorAll('.sections > section');
+        if (sections[idx]) sections[idx].scrollIntoView({behavior:'smooth'});
+      });
+    });
+
+    // heart effect at end: create multiple hearts floating
+    function createFloatingHearts(count=18){
+      for(let i=0;i<count;i++){
+        const f = document.createElement('div');
+        f.className = 'floating-heart';
+        f.textContent = '💖';
+        // random left across viewport
+        f.style.left = (10 + Math.random()*80) + 'vw';
+        f.style.bottom = (-20 - Math.random()*10) + 'px';
+        f.style.fontSize = (18 + Math.random()*32) + 'px';
+        f.style.animationDuration = (1.6 + Math.random()*1.8) + 's';
+        document.body.appendChild(f);
+        setTimeout(()=> f.remove(), 3800);
       }
     }
 
-    function showHearts() {
-      for (let i = 0; i < 20; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('floating-heart');
-        heart.textContent = '💖';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = 2 + Math.random() * 2 + 's';
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 4000);
-      }
-    }
+    heartBtn.addEventListener('click', ()=> {
+      // small click effect
+      createFloatingHearts(22);
+      // optional sound effect could be played here
+    });
 
-    function restartApp() {
+    // Restart: go back to intro (exactly like first-open)
+    restartBtn.addEventListener('click', ()=> {
+      // stop music and reset
+      audioEl.pause();
+      audioEl.currentTime = 0;
+      musicOn = false;
+      musicToggle.textContent = '🔈';
+      // hide main, show intro
       main.classList.remove('visible');
+      main.setAttribute('aria-hidden','true');
+      // scroll sections to top for next time
+      sectionsEl.scrollTop = 0;
+      // show intro
       intro.classList.remove('hidden');
-      music.pause();
-      music.currentTime = 0;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+      started = false;
+    });
+
+    // Music toggle button (works both before/after start)
+    musicToggle.addEventListener('click', ()=>{
+      if (musicOn){
+        audioEl.pause();
+        musicOn = false;
+        musicToggle.textContent = '🔈';
+      } else {
+        audioEl.play().then(()=> {
+          musicOn = true;
+          musicToggle.textContent = '🔊';
+        }).catch(()=> {
+          musicOn = false;
+          musicToggle.textContent = '🔈';
+        });
+      }
+    });
+
+    // Accessibility: allow Enter/Space on startHeart
+    startHeart.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' ') startHeart.click();
+    });
   </script>
 </body>
 </html>
