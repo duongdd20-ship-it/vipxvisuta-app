@@ -5,14 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Vipxvisuta App 💖</title>
   <style>
+    /* --- GLOBAL RESET & BASE --- */
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden}
-    /* INTRO overlay */
+    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden} /* CHẶN CUỘN TOÀN BỘ */
+
+    /* --- INTRO overlay --- */
     .intro{
       position:fixed;inset:0;
       background:url('intro.jpg') center/cover no-repeat;
       display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:18px;z-index:40;transition:opacity .9s ease;
+      gap:18px;z-index:40;transition:opacity 1.2s ease; /* Hiệu ứng mở đầu mượt mà hơn */
     }
     .intro.hidden{opacity:0;pointer-events:none}
     .intro-photo{width:220px;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
@@ -34,44 +36,58 @@
     .start-heart{animation:pulse 1.5s infinite}
     .start-heart > span{transform:rotate(45deg);font-size:40px;margin-left:6px}
 
-    /* MAIN content (no scroll, section visibility controlled by JS) */
-    .main{position:relative;height:100vh;opacity:0;transition:opacity .6s ease;z-index:10;display:block}
+    /* --- MAIN content (No Scroll, Fade Transition) --- */
+    .main{position:relative;height:100vh;opacity:0;transition:opacity 1.2s ease;z-index:10;display:block}
     .main.visible{opacity:1}
     
-    .sections{height:100vh;position:relative;overflow:hidden;} /* Container */
+    .sections{
+      height:100vh;
+      position:relative;
+      overflow: hidden; /* CHẶN CUỘN NỘI DUNG */
+    } 
     
     section{
-      position:absolute;inset:0; /* All sections layered on top of each other */
+      position:absolute;inset:0;
       min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;
       background-size:cover;background-position:center;text-align:center;
-      transition:opacity .8s ease, transform .8s ease; /* Transition for fade-in/out */
+      
+      /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ, KÉO DÀI 1.2s */
+      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+      
       opacity:0;
       pointer-events:none;
+      transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi hiện ra */
     }
     
     section.active{
       opacity:1;
       pointer-events:auto;
-      z-index:20; /* Ensure active section is on top */
+      z-index:20;
+      transform: scale(1); /* Trở về kích thước ban đầu */
     }
     
-    h2{font-size:2.1rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.6)}
-    p{max-width:760px;font-size:1.05rem;line-height:1.6;text-shadow:1px 2px 10px rgba(0,0,0,0.5)}
-    .btn{margin-top:20px;padding:12px 26px;border-radius:24px;border:0;background:#fff;color:#222;font-weight:600;cursor:pointer}
-    .btn:hover{transform:translateY(-6px);transition:all .18s ease}
+    h2{font-size:2.1rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.8)}
+    p{max-width:760px;font-size:1.05rem;line-height:1.6;text-shadow:1px 2px 10px rgba(0,0,0,0.7)}
+    .btn{
+      margin-top:20px;padding:12px 26px;border-radius:24px;border:0;
+      background:linear-gradient(135deg, #fff, #ffe9f2);
+      color:#222;font-weight:600;cursor:pointer;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+    }
+    .btn:hover{transform:translateY(-3px) scale(1.03);transition:all .25s cubic-bezier(0.1, 0.7, 1, 0.1);}
 
     /* music toggle */
     #music-toggle{position:fixed;top:18px;right:18px;z-index:60;background:rgba(255,255,255,0.92);border:0;border-radius:50%;width:46px;height:46px;font-size:18px;cursor:pointer}
 
     /* floating hearts (end effect) */
-    .floating-heart{position:fixed;font-size:28px;opacity:0;pointer-events:none;animation:floatUp 2.4s ease forwards}
+    .floating-heart{position:fixed;font-size:28px;opacity:0;pointer-events:none;animation:floatUp 2.8s ease forwards}
     @keyframes floatUp{0%{transform:translateY(40px) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-260px) scale(1.4);opacity:0}}
 
     /* per-page backgrounds */
     #s1{background-image:url('mission.jpg')}
     #s2{background-image:url('emotion.JPG')}
     #s3{background-image:url('agree.jpg')}
-    /* Trang 4 sử dụng ảnh nền mới: last_page.jpg (hoặc background.jpg tùy bạn đặt tên) */
+    /* SỬ DỤNG FILE ẢNH MỚI CHO TRANG CUỐI */
     #s4{background-image:url('last_page.jpg')} 
   </style>
 </head>
@@ -125,7 +141,6 @@
     const intro = document.getElementById('intro');
     const startHeart = document.getElementById('startHeart');
     const main = document.getElementById('main');
-    const sectionsEl = document.getElementById('sections');
     const sections = document.querySelectorAll('.sections > section');
     const audioEl = document.getElementById('bgAudio');
     const musicToggle = document.getElementById('music-toggle');
@@ -135,15 +150,16 @@
     let currentSectionIndex = 0;
     let musicOn = false;
 
-    // Function to show a specific section
+    // Function to show a specific section with smooth fade/scale transition
     function showSection(index) {
       sections.forEach((s, i) => {
-        s.classList.remove('active');
+        if (i === index) {
+          s.classList.add('active');
+        } else {
+          s.classList.remove('active');
+        }
       });
-      if (sections[index]) {
-        sections[index].classList.add('active');
-        currentSectionIndex = index;
-      }
+      currentSectionIndex = index;
     }
 
     // Start behavior: click heart -> open
@@ -152,7 +168,7 @@
       startHeart.style.transform = 'scale(1.06) rotate(-45deg)';
       setTimeout(()=> startHeart.style.transform = '', 220);
 
-      // hide intro, show main
+      // hide intro, show main (slow fade-out/fade-in)
       intro.classList.add('hidden');
       main.classList.add('visible');
       main.setAttribute('aria-hidden','false');
@@ -197,9 +213,14 @@
     restartBtn.addEventListener('click', ()=>{
       audioEl.pause(); audioEl.currentTime = 0; musicOn = false; musicToggle.textContent='🔈';
       main.classList.remove('visible'); main.setAttribute('aria-hidden','true');
-      sections[currentSectionIndex].classList.remove('active'); // Hide current active section
-      currentSectionIndex = 0; // Reset index
+      sections[currentSectionIndex].classList.remove('active'); 
+      currentSectionIndex = 0; 
       intro.classList.remove('hidden');
+      // Đảm bảo hiệu ứng Active/Scale reset ngay lập tức khi quay lại Intro
+      sections.forEach(s => s.style.transition = 'none');
+      setTimeout(() => {
+        sections.forEach(s => s.style.transition = '');
+      }, 50);
     });
 
     // Music toggle
@@ -214,7 +235,7 @@
     // Accessibility (Enter to open)
     startHeart.addEventListener('keydown', (e)=> { if(e.key==='Enter' || e.key===' ') startHeart.click(); });
 
-    // Preload images (ensures backgrounds available)
+    // Preload images 
     const imgs = ['intro.jpg','photo.jpg','mission.jpg','emotion.JPG','agree.jpg','last_page.jpg'];
     imgs.forEach(src=> { const im=new Image(); im.src=src; });
   </script>
