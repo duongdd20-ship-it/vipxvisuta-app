@@ -6,11 +6,11 @@
   <title>Vipxvisuta App 💖</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; overflow: hidden; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
 
     .slider {
       display: flex;
-      width: 400vw; /* 4 trang = 400% */
+      width: 400vw; /* 4 trang */
       height: 100vh;
       transition: transform 1s ease-in-out;
     }
@@ -20,21 +20,22 @@
       height: 100vh;
       background-size: cover;
       background-position: center;
+      color: #fff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: #fff;
       text-align: center;
-      text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
       opacity: 0;
       transition: opacity 0.8s ease;
     }
 
-    section.active {
-      opacity: 1;
-    }
+    section.active { opacity: 1; }
+
+    h2 { font-size: 2.4em; margin-bottom: 15px; }
+    p { font-size: 1.3em; line-height: 1.5; max-width: 600px; }
 
     button {
       margin-top: 25px;
@@ -43,7 +44,7 @@
       border-radius: 20px;
       background: rgba(255,255,255,0.9);
       color: #333;
-      font-size: 1em;
+      font-size: 1.1em;
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -53,103 +54,103 @@
       transform: scale(1.05);
     }
 
-    /* Ảnh nền cho từng trang */
-    #page1 { background-image: url('background.jpg'); }
-    #page2 { background-image: url('mission.jpg'); }
-    #page3 { background-image: url('emotion.JPG'); }
-    #page4 { background-image: url('agree.jpg'); }
+    /* Ảnh nền */
+    #page0 { background-image: url('background.jpg'); }
+    #page1 { background-image: url('mission.jpg'); }
+    #page2 { background-image: url('emotion.JPG'); }
+    #page3 { background-image: url('agree.jpg'); }
+
+    /* Hiệu ứng trái tim */
+    .heart {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 80px;
+      color: #ff5f8f;
+      opacity: 0;
+      animation: popHeart 1.2s ease forwards;
+    }
+
+    @keyframes popHeart {
+      0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+      30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      60% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -80%) scale(0.5); opacity: 0; }
+    }
+
   </style>
 </head>
-
 <body>
-  <!-- Nhạc nền -->
-  <audio id="bg-music" loop preload="auto">
-    <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
-  </audio>
 
   <div class="slider" id="slider">
-    <!-- Trang 1 -->
-    <section id="page1" class="active">
-      <h2>💌 Nhiệm vụ đặc biệt</h2>
-      <p>Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L</p>
-      <p>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💖</p>
-      <button onclick="nextPage()">Qua mục kế tiếp ➡️</button>
+
+    <!-- 🌸 Trang mở đầu -->
+    <section id="page0" class="active">
+      <h2>💌 Nhiệm vụ khởi động</h2>
+      <p><!-- 👉 Dương sửa ở đây -->Chào mừng em đến với nhiệm vụ đặc biệt mang tên <b>I.M.D. S.P.E.C.I.A.L</b> 💖</p>
+      <p><!-- 👉 Dương sửa ở đây -->Hãy cùng bắt đầu hành trình này nhé, nhiệm vụ đầu tiên đang chờ em...</p>
+      <button onclick="nextPage()">Bắt đầu nhiệm vụ 💫</button>
     </section>
 
-    <!-- Trang 2 -->
-    <section id="page2">
-      <h2>🐱 Cảm xúc</h2>
-      <p>(Cậu điền cảm xúc của cậu vô đây)</p>
+    <!-- 🩷 Trang 1: Nhiệm vụ -->
+    <section id="page1">
+      <h2>📜 Nhiệm vụ 1</h2>
+      <p><!-- 👉 Dương sửa ở đây -->Mã nhiệm vụ: <b>I.M.D. S.P.E.C.I.A.L</b></p>
+      <p><!-- 👉 Dương sửa ở đây -->Hoàn thành nhiệm vụ bằng cách cùng anh đi ăn tối ngày 14/11 nhé 💖</p>
       <button onclick="nextPage()">Tiếp tục ➡️</button>
     </section>
 
-    <!-- Trang 3 -->
-    <section id="page3">
-      <h2>🐍 Lời đồng ý</h2>
-      <p>Anh đồng ý rồi nha, hẹn em tối 14/11 🌙</p>
-      <button onclick="nextPage()">Trang cuối cùng ➡️</button>
+    <!-- 🐱 Trang 2: Cảm xúc -->
+    <section id="page2">
+      <h2>🐱 Cảm xúc</h2>
+      <p><!-- 👉 Dương sửa ở đây -->Dòng cảm xúc của anh khi đọc lời mời và chuẩn bị cho buổi tối đó... (Dương ghi ở đây nha 🥰)</p>
+      <button onclick="nextPage()">Tiếp tục ➡️</button>
     </section>
 
-    <!-- Trang 4 -->
-    <section id="page4">
-      <h2>🌸 Chúc sức khỏe 🌸</h2>
-      <p>(Cậu tự ghi lời chúc ở đây nha 💬)</p>
-      <button onclick="restart()">Quay lại đầu ⬅️</button>
+    <!-- 🌙 Trang 3: Lời chúc / Kết -->
+    <section id="page3">
+      <h2>🌙 Lời chúc</h2>
+      <p><!-- 👉 Dương sửa ở đây -->Anh chúc em thật nhiều sức khỏe, niềm vui, và hẹn em trong buổi tối đặc biệt ấy 💫</p>
+      <button onclick="showHeart()">💖 Gửi trái tim 💖</button>
     </section>
+
   </div>
+
+  <audio id="bg-music" autoplay loop>
+    <source src="background_music.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     const slider = document.getElementById("slider");
     const pages = document.querySelectorAll("section");
-    const music = document.getElementById("bg-music");
     let current = 0;
-    let musicStarted = false;
 
-    // Phát nhạc
-    function playMusic() {
-      if (!musicStarted) {
-        music.play().then(() => {
-          musicStarted = true;
-        }).catch(() => {
-          console.log("Autoplay bị chặn, nhạc sẽ phát khi bấm nút.");
-        });
-      }
-    }
-
-    // Chuyển trang
     function showPage(index) {
       if (index < 0) index = 0;
       if (index > 3) index = 3;
-
       slider.style.transform = `translateX(-${index * 100}vw)`;
 
-      pages.forEach((p, i) => {
-        if (i === index) {
-          setTimeout(() => p.classList.add("active"), 200);
-        } else {
-          p.classList.remove("active");
-        }
+      pages.forEach((p,i)=>{
+        p.classList.toggle("active", i === index);
       });
       current = index;
     }
 
-    function nextPage() {
-      playMusic();
-      if (current < 3) showPage(current + 1);
+    function nextPage(){
+      if(current < 3) showPage(current + 1);
     }
 
-    function restart() {
-      playMusic();
-      showPage(0);
+    function showHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "💖";
+      document.body.appendChild(heart);
+      setTimeout(()=> heart.remove(), 1200);
     }
 
-    // Load ảnh sẵn
-    window.onload = () => {
-      ['background.jpg', 'mission.jpg', 'emotion.JPG', 'agree.jpg'].forEach(src => {
-        const img = new Image();
-        img.src = src;
-      });
-    };
+    window.onload = () => showPage(0);
   </script>
+
 </body>
 </html>
