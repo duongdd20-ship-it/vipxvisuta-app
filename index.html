@@ -60,6 +60,33 @@
     audio { display: none; }
   </style>
 </head>
+  <audio id="bg-music" loop>
+  <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // Khi người dùng bấm lần đầu (qua mục kế tiếp), nhạc sẽ tự bật
+  const music = document.getElementById("bg-music");
+  let musicStarted = false;
+
+  function playMusic() {
+    if (!musicStarted) {
+      music.play().catch(()=>{}); // tránh lỗi bị chặn
+      musicStarted = true;
+    }
+  }
+
+  // Gọi hàm playMusic khi nhấn nút
+  function nextPage() {
+    playMusic();
+    if (current < 2) showPage(current + 1);
+  }
+
+  function restart() {
+    playMusic();
+    showPage(0);
+  }
+</script>
 <body>
   <div class="slider" id="slider">
     <section id="page1" class="active">
