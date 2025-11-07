@@ -6,11 +6,11 @@
   <title>Vipxvisuta App 💖</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html { width: 100%; height: 100%; overflow: hidden; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
 
-    .container {
+    .slider {
       display: flex;
-      width: 300vw; /* Fix lỗi trượt sai kích thước */
+      width: 300vw; /* mỗi trang 100vw */
       height: 100vh;
       transition: transform 1s ease-in-out;
     }
@@ -24,28 +24,33 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: white;
-      font-family: "Segoe UI", sans-serif;
-      font-size: 1.6em;
+      color: #fff;
       text-align: center;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-      transition: opacity 0.8s ease-in-out;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+      font-family: 'Segoe UI', sans-serif;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    section.active {
+      opacity: 1;
     }
 
     button {
-      margin-top: 20px;
+      margin-top: 25px;
       padding: 10px 25px;
-      background-color: rgba(255,255,255,0.85);
       border: none;
       border-radius: 20px;
+      background: rgba(255,255,255,0.9);
+      color: #333;
       font-size: 1em;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background-color: white;
-      transform: scale(1.1);
+      background: white;
+      transform: scale(1.05);
     }
 
     #page1 { background-image: url('mission.jpg'); }
@@ -53,35 +58,26 @@
     #page3 { background-image: url('agree.jpg'); }
 
     audio { display: none; }
-
-    /* Hiệu ứng mờ nền khi chuyển trang */
-    .fade {
-      animation: fadeIn 1.2s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(1.03); }
-      to { opacity: 1; transform: scale(1); }
-    }
   </style>
 </head>
 <body>
-  <div class="container" id="slider">
-    <section id="page1" class="fade">
+  <div class="slider" id="slider">
+    <section id="page1" class="active">
       <h2>💌 Nhiệm vụ đặc biệt</h2>
-      <p>Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L 💫</p>
-      <p>Em hãy hoàn thành nhiệm vụ: đi ăn tối cùng anh nhé 💖</p>
+      <p>Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L</p>
+      <p>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💖</p>
       <button onclick="nextPage()">Qua mục kế tiếp ➡️</button>
     </section>
 
     <section id="page2">
-      <h2>🐱 Cảm xúc của anh</h2>
-      <p>Em chỉ cần cười thôi, mọi thứ xung quanh đều trở nên nhẹ nhàng.</p>
+      <h2>🐱 Cảm xúc</h2>
+      <p>(Cậu điền cảm xúc của cậu vô đây)</p>
       <button onclick="nextPage()">Tiếp tục ➡️</button>
     </section>
 
     <section id="page3">
       <h2>🐍 Lời đồng ý</h2>
-      <p>Anh đồng ý rồi nha, hẹn em ngày 14/11 🌙</p>
+      <p>Anh đồng ý rồi nha, hẹn em tối 14/11 🌙</p>
       <button onclick="restart()">Quay lại đầu ⬅️</button>
     </section>
   </div>
@@ -91,30 +87,47 @@
   </audio>
 
   <script>
-    let currentPage = 0;
-    const totalPages = 3;
     const slider = document.getElementById("slider");
-    const sections = document.querySelectorAll("section");
+    const pages = document.querySelectorAll("section");
+    let current = 0;
+
+    // đảm bảo hình được load xong mới cho chuyển
+    const preloadImages = () => {
+      const images = ['mission.jpg','emotion.JPG','agree.jpg'];
+      images.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
 
     function showPage(index) {
+      // chặn ra ngoài
+      if (index < 0) index = 0;
+      if (index > 2) index = 2;
+
       slider.style.transform = `translateX(-${index * 100}vw)`;
-      sections.forEach((sec, i) => {
-        sec.classList.remove("fade");
-        if (i === index) sec.classList.add("fade");
+
+      pages.forEach((p,i)=>{
+        if(i === index){
+          setTimeout(()=>p.classList.add("active"),200);
+        } else {
+          p.classList.remove("active");
+        }
       });
+      current = index;
     }
 
-    function nextPage() {
-      if (currentPage < totalPages - 1) {
-        currentPage++;
-        showPage(currentPage);
+    function nextPage(){
+      if(current < 2){
+        showPage(current + 1);
       }
     }
 
-    function restart() {
-      currentPage = 0;
-      showPage(currentPage);
+    function restart(){
+      showPage(0);
     }
+
+    window.onload = preloadImages;
   </script>
 </body>
 </html>
