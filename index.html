@@ -14,7 +14,7 @@
       position:fixed;inset:0;
       background:url('intro.jpg') center/cover no-repeat;
       display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:18px;z-index:40;transition:opacity 1.2s ease; /* Hiệu ứng mở đầu mượt mà hơn */
+      gap:18px;z-index:40;transition:opacity 1.2s ease; 
     }
     .intro.hidden{opacity:0;pointer-events:none}
     .intro-photo{width:220px;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
@@ -87,7 +87,6 @@
     #s1{background-image:url('mission.jpg')}
     #s2{background-image:url('emotion.JPG')}
     #s3{background-image:url('agree.jpg')}
-    /* SỬ DỤNG FILE ẢNH MỚI CHO TRANG CUỐI */
     #s4{background-image:url('last_page.jpg')} 
   </style>
 </head>
@@ -107,7 +106,7 @@
 
     <div id="main" class="main" aria-hidden="true">
     <div class="sections" id="sections">
-            <section id="s1" class="active">
+            <section id="s1">
         <h2>💌 Nhiệm vụ đặc biệt</h2>
         <p>Mã nhiệm vụ: <strong>I.M.D. S.P.E.C.I.A.L</strong><br>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕</p>
         <button class="btn" data-next-section>Tiếp tục</button>
@@ -173,7 +172,7 @@
       main.classList.add('visible');
       main.setAttribute('aria-hidden','false');
       
-      // Reset to first section
+      // **QUAN TRỌNG:** Kích hoạt Trang 1 ngay sau khi Intro ẩn
       showSection(0); 
 
       // play music (user gesture)
@@ -216,7 +215,7 @@
       sections[currentSectionIndex].classList.remove('active'); 
       currentSectionIndex = 0; 
       intro.classList.remove('hidden');
-      // Đảm bảo hiệu ứng Active/Scale reset ngay lập tức khi quay lại Intro
+      // Reset hiệu ứng chuyển cảnh sau khi restart
       sections.forEach(s => s.style.transition = 'none');
       setTimeout(() => {
         sections.forEach(s => s.style.transition = '');
