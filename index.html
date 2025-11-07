@@ -4,14 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vipxvisuta App 💖</title>
-
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; }
 
     .slider {
       display: flex;
-      width: 300vw;
+      width: 400vw; /* 4 trang = 400% */
       height: 100vh;
       transition: transform 1s ease-in-out;
     }
@@ -54,37 +53,22 @@
       transform: scale(1.05);
     }
 
-    #page1 { background-image: url('mission.jpg'); }
-    #page2 { background-image: url('emotion.JPG'); }
-    #page3 { background-image: url('agree.jpg'); }
-
-    /* Nút bật/tắt nhạc */
-    #music-btn {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: rgba(255,255,255,0.7);
-      border: none;
-      border-radius: 50%;
-      width: 45px;
-      height: 45px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+    /* Ảnh nền cho từng trang */
+    #page1 { background-image: url('background.jpg'); }
+    #page2 { background-image: url('mission.jpg'); }
+    #page3 { background-image: url('emotion.JPG'); }
+    #page4 { background-image: url('agree.jpg'); }
   </style>
 </head>
 
 <body>
-
   <!-- Nhạc nền -->
   <audio id="bg-music" loop preload="auto">
     <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Nút bật/tắt nhạc -->
-  <button id="music-btn">🔈</button>
-
   <div class="slider" id="slider">
+    <!-- Trang 1 -->
     <section id="page1" class="active">
       <h2>💌 Nhiệm vụ đặc biệt</h2>
       <p>Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L</p>
@@ -92,56 +76,50 @@
       <button onclick="nextPage()">Qua mục kế tiếp ➡️</button>
     </section>
 
+    <!-- Trang 2 -->
     <section id="page2">
       <h2>🐱 Cảm xúc</h2>
       <p>(Cậu điền cảm xúc của cậu vô đây)</p>
       <button onclick="nextPage()">Tiếp tục ➡️</button>
     </section>
 
+    <!-- Trang 3 -->
     <section id="page3">
       <h2>🐍 Lời đồng ý</h2>
       <p>Anh đồng ý rồi nha, hẹn em tối 14/11 🌙</p>
+      <button onclick="nextPage()">Trang cuối cùng ➡️</button>
+    </section>
+
+    <!-- Trang 4 -->
+    <section id="page4">
+      <h2>🌸 Chúc sức khỏe 🌸</h2>
+      <p>(Cậu tự ghi lời chúc ở đây nha 💬)</p>
       <button onclick="restart()">Quay lại đầu ⬅️</button>
     </section>
   </div>
 
   <script>
-    const music = document.getElementById("bg-music");
     const slider = document.getElementById("slider");
     const pages = document.querySelectorAll("section");
-    const musicBtn = document.getElementById("music-btn");
-
+    const music = document.getElementById("bg-music");
     let current = 0;
     let musicStarted = false;
-    let isPlaying = false;
 
+    // Phát nhạc
     function playMusic() {
       if (!musicStarted) {
         music.play().then(() => {
           musicStarted = true;
-          isPlaying = true;
-          musicBtn.textContent = "🔊";
         }).catch(() => {
-          console.log("Autoplay bị chặn, sẽ phát khi bấm nút.");
+          console.log("Autoplay bị chặn, nhạc sẽ phát khi bấm nút.");
         });
-      } else {
-        if (isPlaying) {
-          music.pause();
-          isPlaying = false;
-          musicBtn.textContent = "🔈";
-        } else {
-          music.play();
-          isPlaying = true;
-          musicBtn.textContent = "🔊";
-        }
       }
     }
 
-    musicBtn.addEventListener("click", playMusic);
-
+    // Chuyển trang
     function showPage(index) {
       if (index < 0) index = 0;
-      if (index > 2) index = 2;
+      if (index > 3) index = 3;
 
       slider.style.transform = `translateX(-${index * 100}vw)`;
 
@@ -152,13 +130,12 @@
           p.classList.remove("active");
         }
       });
-
       current = index;
     }
 
     function nextPage() {
       playMusic();
-      if (current < 2) showPage(current + 1);
+      if (current < 3) showPage(current + 1);
     }
 
     function restart() {
@@ -166,15 +143,13 @@
       showPage(0);
     }
 
+    // Load ảnh sẵn
     window.onload = () => {
-      const images = ['mission.jpg', 'emotion.JPG', 'agree.jpg'];
-      images.forEach(src => {
+      ['background.jpg', 'mission.jpg', 'emotion.JPG', 'agree.jpg'].forEach(src => {
         const img = new Image();
         img.src = src;
       });
-      showPage(0);
     };
   </script>
-
 </body>
 </html>
