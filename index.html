@@ -5,188 +5,210 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vipxvisuta App 💖</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; overflow: hidden; }
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      background-color: #000;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
 
-    .slider {
+    /* --- Intro --- */
+    .intro {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: url('intro.jpg') center/cover no-repeat;
       display: flex;
-      width: 400vw; /* 4 trang */
-      height: 100vh;
-      transition: transform 1s ease-in-out;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 10;
+      transition: opacity 1.5s ease;
+    }
+
+    .intro.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .heart {
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #ff4f8b, #ff1f5a);
+      position: relative;
+      transform: rotate(-45deg);
+      cursor: pointer;
+      animation: pulse 1.5s infinite;
+      box-shadow: 0 0 20px rgba(255, 100, 150, 0.6);
+    }
+
+    .heart::before, .heart::after {
+      content: "";
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #ff4f8b, #ff1f5a);
+      border-radius: 50%;
+      position: absolute;
+    }
+    .heart::before { top: -60px; left: 0; }
+    .heart::after { left: 60px; top: 0; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1) rotate(-45deg); }
+      50% { transform: scale(1.1) rotate(-45deg); }
+    }
+
+    .main {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+
+    .main.visible {
+      opacity: 1;
     }
 
     section {
-      flex: 0 0 100vw;
-      height: 100vh;
+      min-height: 100vh;
       background-size: cover;
       background-position: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      color: #fff;
       text-align: center;
-      text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-      font-family: 'Segoe UI', sans-serif;
-      opacity: 0;
-      transition: opacity 0.8s ease;
-      font-size: 1.3em; /* chữ to hơn */
+      padding: 20px;
     }
 
-    section.active {
-      opacity: 1;
+    h2 {
+      font-size: 2.2em;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+    }
+
+    p {
+      max-width: 600px;
+      font-size: 1.2em;
+      line-height: 1.6;
+      text-shadow: 1px 1px 8px rgba(0,0,0,0.6);
     }
 
     button {
-      margin-top: 25px;
-      padding: 12px 30px;
+      margin-top: 30px;
+      padding: 10px 25px;
       border: none;
-      border-radius: 20px;
+      border-radius: 25px;
       background: rgba(255,255,255,0.9);
       color: #333;
       font-size: 1em;
       cursor: pointer;
       transition: all 0.3s ease;
     }
+    button:hover { transform: scale(1.05); }
 
-    button:hover {
-      background: white;
-      transform: scale(1.05);
-    }
-
-    /* hình nền từng trang */
-    #page1 { background-image: url('your_first_image.jpg'); } /* ảnh đầu tiên (nhiệm vụ) */
-    #page2 { background-image: url('mission.jpg'); } /* ảnh 2 */
-    #page3 { background-image: url('emotion.JPG'); } /* ảnh 3 */
-    #page4 { background-image: url('agree.jpg'); } /* ảnh 4 (trang chúc sức khỏe) */
-
-    /* hiệu ứng trái tim */
-    .heart {
+    /* Hiệu ứng trái tim bay */
+    .floating-heart {
       position: fixed;
+      bottom: 50px;
       left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      color: #ff4d6d;
-      font-size: 5em;
+      transform: translateX(-50%);
+      font-size: 2em;
       opacity: 0;
-      transition: all 1s ease;
-      pointer-events: none;
+      animation: floatUp 2.5s ease forwards;
     }
 
-    .heart.show {
-      transform: translate(-50%, -50%) scale(1.2);
-      opacity: 1;
+    @keyframes floatUp {
+      0% {opacity: 0; transform: translate(-50%, 50px) scale(0.8);}
+      50% {opacity: 1;}
+      100% {opacity: 0; transform: translate(-50%, -200px) scale(1.5);}
     }
-
-    /* nút nhạc */
-    #music-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(255,255,255,0.8);
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      font-size: 1.2em;
-      transition: transform 0.3s ease;
-    }
-
-    #music-btn:hover {
-      transform: scale(1.1);
-    }
-
   </style>
 </head>
 <body>
+
   <!-- Nhạc nền -->
-  <audio id="bg-music" loop preload="auto">
+  <audio id="bgMusic" loop preload="auto">
     <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- Nút bật/tắt nhạc -->
-  <button id="music-btn">🔊</button>
+  <!-- Màn hình intro -->
+  <div class="intro" id="intro">
+    <div class="heart" id="startHeart"></div>
+    <p style="margin-top:20px;font-size:1.2em;">Bấm vào trái tim để bắt đầu 💖</p>
+  </div>
 
-  <!-- Slider 4 trang -->
-  <div class="slider" id="slider">
-    <section id="page1" class="active">
+  <!-- Nội dung chính -->
+  <div class="main" id="mainContent">
+    <section style="background-image:url('mission.jpg');">
       <h2>💌 Nhiệm vụ đặc biệt</h2>
-      <p>✨ Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L ✨</p>
-      <p>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💖</p>
-      <button onclick="nextPage()">Qua mục kế tiếp ➡️</button>
+      <p><!-- 💬 Cậu sửa nội dung này: mô tả lại nhiệm vụ mà bạn gái giao -->  
+        Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L<br>
+        Hoàn thành nhiệm vụ bằng cách cùng anh đi ăn tối ngày 14/11 nhé 💕
+      </p>
+      <button onclick="scrollToNext(1)">Tiếp tục ➡️</button>
     </section>
 
-    <section id="page2">
+    <section style="background-image:url('emotion.JPG');">
       <h2>🐱 Cảm xúc</h2>
-      <p>(Cậu điền cảm xúc của cậu vô đây)</p>
-      <button onclick="nextPage()">Tiếp tục ➡️</button>
+      <p><!-- 💬 Cậu sửa đoạn này để ghi cảm xúc của mình khi đọc lời mời -->  
+        (Cậu viết cảm xúc của cậu vào đây — ví dụ: “Lúc đọc những dòng ấy, tim anh hơi loạn nhịp...”)
+      </p>
+      <button onclick="scrollToNext(2)">Tiếp tục ➡️</button>
     </section>
 
-    <section id="page3">
+    <section style="background-image:url('agree.jpg');">
       <h2>🐍 Lời đồng ý</h2>
-      <p>Anh đồng ý rồi nha, hẹn em tối 14/11 🌙</p>
-      <button onclick="nextPage()">Trang cuối cùng ➡️</button>
+      <p><!-- 💬 Cậu sửa đoạn này để trả lời bạn gái theo cách riêng -->  
+        Anh đồng ý rồi nha 💖 Hẹn em tối 14/11, để anh hoàn thành nhiệm vụ của mình 🌙
+      </p>
+      <button onclick="scrollToNext(3)">Tiếp tục ➡️</button>
     </section>
 
-    <section id="page4">
-      <h2>💖 Lời chúc</h2>
-      <!-- ✏️ Cậu có thể sửa dòng này để viết theo cảm xúc riêng -->
-      <p>Chúc em luôn vui vẻ, mạnh khỏe và gặp nhiều điều tốt đẹp nha 💐</p>
-      <button onclick="showHeart()">Nhấn để nhận bất ngờ 💘</button>
+    <section style="background-image:url('agree.jpg');">
+      <h2>🌹 Lời chúc & Kết</h2>
+      <p><!-- 💬 Cậu điền lời chúc, lời nhắn cuối cùng -->  
+        (Cậu có thể viết lời chúc sức khỏe, lời cảm ơn, hoặc điều muốn nói riêng ở đây 💗)
+      </p>
+      <button onclick="showHearts()">💞 Gửi tim 💞</button>
     </section>
   </div>
 
-  <!-- Trái tim hiệu ứng -->
-  <div class="heart" id="heart">❤️</div>
-
   <script>
-    const slider = document.getElementById("slider");
-    const pages = document.querySelectorAll("section");
-    const heart = document.getElementById("heart");
-    const music = document.getElementById("bg-music");
-    const musicBtn = document.getElementById("music-btn");
-    let current = 0;
-    let musicOn = false;
+    const heart = document.getElementById('startHeart');
+    const intro = document.getElementById('intro');
+    const main = document.getElementById('mainContent');
+    const music = document.getElementById('bgMusic');
 
-    // chuyển trang
-    function showPage(index) {
-      if (index < 0) index = 0;
-      if (index > 3) index = 3;
-      slider.style.transform = `translateX(-${index * 100}vw)`;
-      pages.forEach((p,i)=>{
-        p.classList.toggle("active", i === index);
-      });
-      current = index;
-    }
-
-    function nextPage() {
-      if (current < 3) showPage(current + 1);
-    }
-
-    // hiệu ứng trái tim
-    function showHeart() {
-      heart.classList.add("show");
-      setTimeout(() => heart.classList.remove("show"), 2000);
-    }
-
-    // nhạc
-    musicBtn.addEventListener("click", () => {
-      if (musicOn) {
-        music.pause();
-        musicBtn.textContent = "🔇";
-      } else {
-        music.play();
-        musicBtn.textContent = "🔊";
-      }
-      musicOn = !musicOn;
+    heart.addEventListener('click', () => {
+      heart.style.animation = "pulse 0.4s ease";
+      setTimeout(() => {
+        intro.classList.add('hidden');
+        main.classList.add('visible');
+        music.play().catch(()=>console.log("Autoplay blocked"));
+      }, 1000);
     });
 
-    // preload hình
-    window.onload = () => {
-      const imgs = ['your_first_image.jpg','mission.jpg','emotion.JPG','agree.jpg'];
-      imgs.forEach(src => { const img = new Image(); img.src = src; });
-    };
+    function scrollToNext(i) {
+      const sections = document.querySelectorAll("section");
+      if (sections[i]) {
+        sections[i].scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function showHearts() {
+      for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('floating-heart');
+        heart.textContent = '💖';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = 2 + Math.random() * 2 + 's';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 4000);
+      }
+    }
   </script>
 </body>
 </html>
