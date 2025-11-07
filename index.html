@@ -1,449 +1,384 @@
 <!DOCTYPE html>
-
 <html lang="vi">
-
-<đầu>
-
+<head>
   <meta charset="utf-8" />
-
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-
-  <title>Ứng dụng Vipxvisuta 💖</title>
-
-  <phong cách>
-
-    *{kích thước hộp:hộp viền;lề:0;đệm:0}
-
-    html, body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden}
-
-
-
-    /* Lớp phủ GIỚI THIỆU */
-
-    .giới thiệu{
-
-      vị trí: cố định; chèn: 0;
-
-      nền:url('intro.jpg') giữa/bìa không lặp lại;
-
-      hiển thị: flex; hướng flex: cột; căn chỉnh các mục: giữa; căn chỉnh nội dung: giữa;
-
-      khoảng cách: 18px; chỉ số z: 40; chuyển đổi: độ mờ đục .9 giây dễ dàng;
-
+  <title>Vipxvisuta App 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0 }
+    /* Áp dụng font chữ mới */
+    html, body { 
+      height: 100%; 
+      font-family: 'Dancing Script', cursive, Segoe UI, Roboto, sans-serif; 
+      background: #000; 
+      color: #fff; 
+      overflow: hidden 
     }
 
-    .intro.hidden{độ mờ đục:0;sự kiện con trỏ:không có}
+    /* INTRO overlay */
+    .intro {
+      position: fixed; inset: 0;
+      background: url('intro.jpg') center/cover no-repeat;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 18px; z-index: 40; transition: opacity .9s ease;
+    }
+    .intro.hidden { opacity: 0; pointer-events: none }
+    .intro-photo, .intro-extra {
+      width: 220px; height: 140px; object-fit: cover; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    }
+    .start-heart {
+      width: 120px; height: 120px; position: relative; cursor: pointer;
+      transform: rotate(-45deg);
+      background: radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
+      box-shadow: 0 12px 30px rgba(255, 90, 140, 0.35);
+      display: flex; align-items: center; justify-content: center; outline: none; border: 0;
+      animation: pulse 1.5s infinite;
+    }
+    .start-heart::before, .start-heart::after {
+      content: ""; position: absolute; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
+      width: 120px; height: 120px;
+    }
+    .start-heart::before { top: -60px; left: 0 }
+    .start-heart::after { left: 60px; top: 0 }
+    .start-heart > span { transform: rotate(45deg); font-size: 40px; margin-left: 6px }
 
-    .intro-photo, .intro-extra{
-
-      chiều rộng: 220px; chiều cao: 140px; đối tượng-phù hợp: bìa; bán kính đường viền: 12px; bóng hộp: 0 10px 30px rgba(0,0,0,0.6);
-
+    @keyframes pulse {
+      0% { transform: scale(1) rotate(-45deg) }
+      50% { transform: scale(1.08) rotate(-45deg) }
+      100% { transform: scale(1) rotate(-45deg) }
     }
 
-    .bắt đầu-trái tim{
+    /* MAIN content (scrollable, snap) */
+    .main { position: relative; height: 100vh; opacity: 0; transition: opacity .6s ease; z-index: 10; display: block }
+    .main.visible { opacity: 1 }
+    .sections {
+      height: 100vh; overflow-y: auto; scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      transition: transform 0.8s ease, opacity 0.6s ease;
+    }
+    section {
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px;
+      background-size: cover; background-position: center; scroll-snap-align: start; text-align: center;
+      transition: transform .7s cubic-bezier(.2, .9, .2, 1), opacity .6s ease;
+      transform: translateY(30px); opacity: 0;
+    }
+    section.in-view { transform: translateY(0); opacity: 1 }
+    h2 { font-size: 2.5rem; margin-bottom: 16px; text-shadow: 2px 4px 18px rgba(0, 0, 0, 0.9) }
+    p { max-width: 760px; font-size: 1.25rem; line-height: 1.6; text-shadow: 1px 2px 10px rgba(0, 0, 0, 0.8) }
+    .btn { margin-top: 20px; padding: 12px 26px; border-radius: 24px; border: 0; background: #fff; color: #222; font-weight: 600; cursor: pointer; transition: all .18s ease; }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2); }
 
-      chiều rộng: 120px; chiều cao: 120px; vị trí: tương đối; con trỏ: con trỏ;
+    /* music toggle */
+    #music-toggle { position: fixed; top: 18px; right: 18px; z-index: 60; background: rgba(255, 255, 255, 0.92); border: 0; border-radius: 50%; width: 46px; height: 46px; font-size: 18px; cursor: pointer }
 
-      biến đổi: xoay (-45 độ);
-
-      nền:radial-gradient(hình tròn ở 30% 30%, #ff83a2, #ff2a66);
-
-      hộp bóng: 0 12px 30px rgba(255,90,140,0.35);
-
-      hiển thị: flex; căn chỉnh các mục: giữa; căn chỉnh nội dung: giữa; phác thảo: không có; viền: 0;
-
-      hoạt hình: xung 1,5 giây vô hạn;
-
+    /* floating hearts */
+    .floating-heart { position: fixed; font-size: 28px; opacity: 0; pointer-events: none; animation: floatUp 2.4s ease forwards }
+    @keyframes floatUp {
+      0% { transform: translateY(40px) scale(.8); opacity: 0 }
+      20% { opacity: 1 }
+      100% { transform: translateY(-260px) scale(1.4); opacity: 0 }
     }
 
-    .start-heart::before,.start-heart::after{
-
-      nội dung:"";vị trí:tuyệt đối;bán kính đường viền:50%;nền:độ dốc xuyên tâm(hình tròn ở 30% 30%, #ff83a2, #ff2a66);
-
-      chiều rộng: 120px; chiều cao: 120px;
-
+    /* Modal for inputs */
+    .modal-overlay {
+        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); z-index: 100;
+        display: none; align-items: center; justify-content: center;
+    }
+    .modal-content {
+        background: #222; padding: 25px; border-radius: 12px; max-width: 90%; width: 400px;
+        box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+    .modal-content textarea {
+        width: 100%; height: 120px; padding: 10px; border-radius: 6px; border: 1px solid #444;
+        background: #333; color: #fff; margin: 10px 0; font-family: inherit; font-size: 1rem;
     }
 
-    .start-heart::before{top:-60px;left:0}
+    /* per-page backgrounds */
+    #s1 { background-image: url('mission.jpg') }
+    #s2 { background-image: url('emotion.JPG') }
+    #s3 { background-image: url('agree.jpg') }
+    #s4 { background-image: url('background.jpg') } 
+  </style>
+</head>
+<body>
 
-    .start-heart::after{trái:60px;trên:0}
-
-    .start-heart > span{biến đổi:xoay(45 độ);cỡ chữ:40px;lề trái:6px}
-
-
-
-    @keyframes xung{
-
-      0%{biến đổi:tỷ lệ(1) xoay(-45 độ)}
-
-      50%{biến đổi:tỷ lệ(1.08) xoay(-45 độ)}
-
-      100%{biến đổi:tỷ lệ(1) xoay(-45 độ)}
-
-    }
-
-
-
-    /* Nội dung CHÍNH (có thể cuộn, chụp nhanh) */
-
-    .main{vị trí: tương đối; chiều cao: 100vh; độ mờ: 0; chuyển đổi: độ mờ .6 giây ease; chỉ số z: 10; hiển thị: khối}
-
-    .main.visible{độ mờ đục:1}
-
-    .phần{
-
-      chiều cao: 100vh; tràn-y: tự động; hành vi cuộn: mượt mà;
-
-      scroll-snap-type:y bắt buộc;
-
-      -webkit-overflow-scrolling:chạm;
-
-      chuyển đổi: biến đổi dễ dàng 0,8 giây, độ mờ đục dễ dàng 0,6 giây;
-
-    }
-
-    phần{
-
-      chiều cao tối thiểu: 100vh; hiển thị: flex; hướng flex: cột; căn chỉnh các mục: giữa; căn chỉnh nội dung: giữa; đệm: 28px;
-
-      kích thước nền: bìa; vị trí nền: giữa; căn chỉnh cuộn: bắt đầu; căn chỉnh văn bản: giữa;
-
-      chuyển đổi:biến đổi .7s cubic-bezier(.2,.9,.2,1),độ mờ đục .6s ease;
-
-      biến đổi: translateY(30px); độ mờ đục:0;
-
-    }
-
-    section.in-view{biến đổi: dịch chuyểnY(0); độ mờ đục:1}
-
-    h2{font-size:2.1rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.6)}
-
-    p{chiều rộng tối đa: 760px;cỡ chữ: 1.05rem;chiều cao dòng: 1.6;bóng chữ: 1px 2px 10px rgba(0,0,0,0.5)}
-
-    .btn{margin-top:20px;padding:12px 26px;border-radius:24px;border:0;background:#fff;color:#222;font-weight:600;cursor:pointer}
-
-    .btn:hover{biến đổi:dịchY(-6px);chuyển đổi:tất cả .18 giây dễ dàng}
-
-
-
-    /* chuyển đổi nhạc */
-
-    #music-toggle{vị trí: cố định; trên cùng: 18px; bên phải: 18px; chỉ số z: 60; nền: rgba (255, 255, 255, 0,92); đường viền: 0; bán kính đường viền: 50%; chiều rộng: 46px; chiều cao: 46px; kích thước phông chữ: 18px; con trỏ: con trỏ}
-
-
-
-    /* trái tim nổi */
-
-    .floating-heart{vị trí: cố định; cỡ chữ: 28px; độ mờ: 0; sự kiện con trỏ: không có; hoạt ảnh: floatUp 2,4 giây dễ dàng tiến về phía trước}
-
-    @keyframes floatUp{
-
-      0%{biến đổi:dịchY(40px)tỷ lệ(.8);độ mờ đục:0}
-
-      20%{độ mờ đục:1}
-
-      100%{biến đổi:dịchY(-260px)tỷ lệ(1.4);độ mờ đục:0}
-
-    }
-
-
-
-    /* hình nền cho mỗi trang */
-
-    #s1{ảnh-nền:url('mission.jpg')}
-
-    #s2{ảnh-nền:url('cảm-xúc.JPG')}
-
-    #s3{ảnh-nền:url('agree.jpg')}
-
-    #s4{ảnh-nền:url('ảnh.jpg')}
-
-  </phong cách>
-
-</đầu>
-
-<thân>
-
-
-
-  <!-- âm thanh -->
+  <div id="textModal" class="modal-overlay">
+      <div class="modal-content">
+          <h3 id="modalTitle" style="font-size: 1.5rem; text-align: center; margin-bottom: 10px;"></h3>
+          <textarea id="modalInput" maxlength="300" placeholder="Viết vào đây..."></textarea>
+          <div style="display: flex; justify-content: space-between; gap: 10px;">
+              <button id="saveModalBtn" class="btn" style="width: 50%; margin-top: 0; background: #ff2a66; color: #fff;">Lưu</button>
+              <button id="closeModalBtn" class="btn" style="width: 50%; margin-top: 0; background: #555; color: #fff;">Đóng</button>
+          </div>
+      </div>
+  </div>
 
   <audio id="bgAudio" preload="auto" loop>
-
     <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
-
-  </âm thanh>
-
-
-
-  <!-- chuyển đổi nhạc -->
+  </audio>
 
   <button id="music-toggle" aria-label="nhac">🔈</button>
 
-
-
-  <!-- Lớp phủ GIỚI THIỆU -->
-
   <div id="intro" class="intro" role="dialog" aria-label="Màn hình mở đầu">
-
     <img id="introPhoto" class="intro-photo" src="photo.jpg" alt="Hình kỷ niệm" onerror="this.style.display='none'">
-
     <img id="introExtra" class="intro-extra" src="myphoto.jpg" alt="Hình của tôi" onerror="this.style.display='none'">
-
-    <button id="startHeart" class="start-heart" title="Bấm để bắt đầu" aria-ép="false"><span>❤</span></button>
-
-    <div style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Bấm trái tim để mở đầu</div>
-
-  </div>
-
-
-
-  <!-- Nội dung chính -->
-
-  <div id="main" class="main" aria-hidden="true">
-
-    <div class="sections" id="sections">
-
-      <!-- Phần 1 -->
-
-      <phần id="s1">
-
-        <h2>💌 Nhiệm vụ đặc biệt</h2>
-
-        <p>Mã nhiệm vụ: <strong>IMDSPECIAL</strong><br>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕</p>
-
-        <button class="btn" data-next="1">Tiếp tục</button>
-
-      </phần>
-
-
-
-      <!-- Phần 2 -->
-
-      <phần id="s2">
-
-        <h2>🐱 Cảm xúc</h2>
-
-        <p>(Viết cảm xúc của bạn ở đây — ví dụ: "Khi đọc, anh thấy tim rung...")</p>
-
-        <button class="btn" data-next="2">Tiếp tục</button>
-
-      </phần>
-
-
-
-      <!-- Phần 3 -->
-
-      <phần id="s3">
-
-        <h2>🐍Lời đồng ý</h2>
-
-        <p>Anh đồng ý nhé 💖 Hẹn giờ em tối 14/11.</p>
-
-        <button class="btn" data-next="3">Tiếp tục</button>
-
-      </phần>
-
-
-
-      <!-- Phần 4 -->
-
-      <phần id="s4">
-
-        <h2>✨ Lời chúc & kết quả</h2>
-
-        <p>(Viết lời chúc ở đây — ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")</p>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
-
-          <button class="btn" id="heartBtn">💞 Gửi tim</button>
-
-          <button class="btn" id="restartBtn">🔁 Quay lại từ đầu</button>
-
-        </div>
-
-      </phần>
-
+    
+    <div id="password-area" style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:15px">
+        <input type="text" id="secretPass" placeholder="Ngày đầu đi chơi (DD/MM/YYYY)" style="padding:10px;border-radius:8px;border:none;text-align:center;font-size:1rem;color:#333;width:250px;">
+        <button id="checkPassBtn" class="btn" style="margin-top:0;padding:10px 20px;width:250px">Mở Khóa Thiệp</button>
+        <p id="passError" style="color:yellow;font-size:0.9rem;display:none;text-shadow:1px 1px 4px rgba(0,0,0,0.8);">Mật mã sai. Hãy thử lại.</p>
     </div>
 
+    <button id="startHeart" class="start-heart" title="Bấm để bắt đầu" aria-pressed="false" style="display:none"><span>❤</span></button>
+    <div id="intro-text" style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Nhập mật mã để mở thiệp</div>
   </div>
 
+  <div id="main" class="main" aria-hidden="true">
+    <div class="sections" id="sections">
+      <section id="s1">
+        <h2>💌 Nhiệm vụ đặc biệt</h2>
+        <p>Mã nhiệm vụ: <strong>I.M.D. S.P.E.C.I.A.L</strong><br>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕</p>
+        
+        <p style="margin-top: 20px; font-size: 1.2rem; color: #ffeb3b; text-shadow: 1px 1px 4px rgba(0,0,0,0.8);">Kỷ niệm bất ngờ của chúng ta!</p>
+        <img id="randomMemory" src="" alt="Kỷ niệm" style="width: 280px; height: 180px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7); margin-top: 10px;">
+        
+        <button class="btn" data-next="1">Tiếp tục</button>
+      </section>
 
+      <section id="s2">
+        <h2>🐱 Cảm xúc của em</h2>
+        <p id="emotionText">(Viết cảm xúc của bạn ở đây — Ví dụ: "Khi đọc, anh thấy tim rung...")</p>
+        <button class="btn" data-modal="emotion" style="margin-bottom: 10px;">Thêm/Sửa Cảm xúc</button>
+        <button class="btn" data-next="2">Tiếp tục</button>
+      </section>
+
+      <section id="s3">
+        <h2>🐍 Lời đồng ý</h2>
+        <p>Anh đồng ý nhé 💖 Hẹn em tối 14/11.</p>
+        <button class="btn" data-next="3">Tiếp tục</button>
+      </section>
+
+      <section id="s4">
+        <h2>🌹 Lời chúc & Kết</h2>
+        <p id="wishText">(Viết lời chúc ở đây — Ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")</p>
+        <button class="btn" data-modal="wish" style="margin-bottom: 10px;">Thêm/Sửa Lời chúc</button>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
+          <button class="btn" id="heartBtn">💞 Gửi tim</button>
+          <button class="btn" id="restartBtn">🔁 Quay lại từ đầu</button>
+        </div>
+      </section>
+    </div>
+  </div>
 
   <script>
-
     const intro = document.getElementById('intro');
-
     const startHeart = document.getElementById('startHeart');
-
     const main = document.getElementById('main');
-
     const sectionsEl = document.getElementById('sections');
-
     const audioEl = document.getElementById('bgAudio');
-
     const musicToggle = document.getElementById('music-toggle');
-
     const restartBtn = document.getElementById('restartBtn');
-
     const heartBtn = document.getElementById('heartBtn');
+    
+    // ELEMENTS MỚI (Mật mã và Modal)
+    const secretPassInput = document.getElementById('secretPass');
+    const checkPassBtn = document.getElementById('checkPassBtn');
+    const passwordArea = document.getElementById('password-area');
+    const introText = document.getElementById('intro-text');
+    const passError = document.getElementById('passError');
 
+    const modalOverlay = document.getElementById('textModal');
+    const modalInput = document.getElementById('modalInput');
+    const modalTitle = document.getElementById('modalTitle');
+    const saveModalBtn = document.getElementById('saveModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
 
+    const randomMemoryEl = document.getElementById('randomMemory');
+    
+    let currentModalKey = ''; // Key for localStorage
+    let musicOn = false;
+    
+    // ⚠️ MẬT MÃ BÍ MẬT: 07/05/2025
+    const SECRET_PASSWORD = "07/05/2025"; 
 
-    để musicOn = false;
+    // ⚠️ ĐIỀN TÊN CÁC TỆP ẢNH KỶ NIỆM CỦA BẠN VÀO MẢNG NÀY 
+    // (Bạn cần tạo các file ảnh này trong thư mục dự án)
+    const MEMORY_PHOTOS = [
+        'memory1.jpg', 
+        'memory2.jpg', 
+        'memory3.jpg', 
+        'photo.jpg', 
+        'myphoto.jpg'
+    ]; 
 
-
-
-    // Làm hoạt hình các phần
-
-    const observer = new IntersectionObserver((entries)=>{
-
-      entries.forEach(entry=>{
-
-        nếu(mục nhập.làGiao thoa){
-
-          mục nhập.mục tiêu.classList.add('trong chế độ xem');
-
-        } khác {
-
-          entry.target.classList.remove('trong tầm nhìn');
-
+    function displayRandomMemory() {
+        if (MEMORY_PHOTOS.length > 0) {
+            const randomIndex = Math.floor(Math.random() * MEMORY_PHOTOS.length);
+            randomMemoryEl.src = MEMORY_PHOTOS[randomIndex];
         }
-
-      });
-
-    }, {ngưỡng: 0,38});
-
-    document.querySelectorAll('.sections > section').forEach(s=>observer.observe(s));
-
-
-
-    // Bắt đầu nhấp chuột trái tim
-
-    startHeart.addEventListener('nhấp', ()=>{
-
-      startHeart.style.transform = 'tỷ lệ (1,06) xoay (-45 độ)';
-
-      setTimeout(()=> startHeart.style.transform = '', 220);
-
-      intro.classList.add('ẩn');
-
-      main.classList.add('hiển thị');
-
-      main.setAttribute('aria-ẩn','sai');
-
-      sectionsEl.scrollTop = 0;
-
-
-
-      audioEl.currentTime = 0;
-
-      audioEl.play().then(()=> { musicOn=true; musicToggle.textContent='🔊'; })
-
-      .catch(()=> { musicOn=false; musicToggle.textContent='🔈'; });
-
-    });
-
-
-
-    // Tiếp tục cuộn nút
-
-    document.querySelectorAll('.btn[data-next]').forEach(btn=>{
-
-      btn.addEventListener('nhấp chuột', ()=>{
-
-        const idx = Số(btn.getAttribute('dữ liệu tiếp theo'));
-
-        const sections = document.querySelectorAll('.sections > section');
-
-        nếu(phần[idx]) phần[idx].scrollIntoView({hành vi:'mượt mà'});
-
-      });
-
-    });
-
-
-
-    // Trái tim nổi
-
-    hàm createFloatingHearts(count=20){
-
-      đối với (cho i = 0; i < số đếm; i++)
-
-        const f = document.createElement('div');
-
-        f.className='trái tim nổi';
-
-        f.textContent='💖';
-
-        f.style.left=(6 + Math.random()*88)+'vw';
-
-        f.style.bottom=(-10 - Math.random()*20)+'px';
-
-        f.style.fontSize=(16 + Math.random()*36)+'px';
-
-        f.style.animationDuration=(1.5 + Math.random()*1.6)+'s';
-
-        document.body.appendChild(f);
-
-        setTimeout(()=> f.remove(), 3800);
-
-      }
-
     }
 
-    heartBtn.addEventListener('nhấp chuột', ()=>createFloatingHearts(22));
 
+    /* --- LOGIC CÁ NHÂN HÓA (LOCAL STORAGE) --- */
+    function loadAndDisplayTexts() {
+        const emotion = localStorage.getItem('emotion');
+        const wish = localStorage.getItem('wish');
+        
+        if (emotion) {
+            document.getElementById('emotionText').textContent = emotion;
+        } else {
+            document.getElementById('emotionText').textContent = '(Viết cảm xúc của bạn ở đây — Ví dụ: "Khi đọc, anh thấy tim rung...")';
+        }
 
+        if (wish) {
+            document.getElementById('wishText').textContent = wish;
+        } else {
+            document.getElementById('wishText').textContent = '(Viết lời chúc ở đây — Ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")';
+        }
+    }
+    loadAndDisplayTexts(); // Load ngay khi tải trang
 
-    // Khởi động lại
-
-    restartBtn.addEventListener('nhấp', ()=>{
-
-      audioEl.pause(); audioEl.currentTime=0; musicOn=false; musicToggle.textContent='🔈';
-
-      main.classList.remove('hiển thị'); main.setAttribute('aria-ẩn','đúng');
-
-      sectionsEl.scrollTop=0;
-
-      intro.classList.remove('ẩn');
-
-      // hoạt ảnh đặt lại trái tim
-
-      startHeart.style.animation = 'không có';
-
-      setTimeout(()=> startHeart.style.animation = 'xung 1,5 giây vô hạn', 10);
-
+    /* --- LOGIC MODAL (NHẬP CẢM XÚC/LỜI CHÚC) --- */
+    document.querySelectorAll('.btn[data-modal]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentModalKey = btn.getAttribute('data-modal');
+            
+            if (currentModalKey === 'emotion') {
+                modalTitle.textContent = 'Cảm xúc của em';
+                modalInput.value = localStorage.getItem('emotion') || '';
+            } else if (currentModalKey === 'wish') {
+                modalTitle.textContent = 'Lời chúc & Kết';
+                modalInput.value = localStorage.getItem('wish') || '';
+            }
+            modalOverlay.style.display = 'flex';
+            modalInput.focus();
+        });
     });
 
-
-
-    // Chuyển đổi nhạc
-
-    musicToggle.addEventListener('click', ()=>{
-
-      if(musicOn){ audioEl.pause(); musicOn=false; musicToggle.textContent='🔈'; }
-
-      else{ audioEl.play().then(()=>{ musicOn=true; musicToggle.textContent='🔊'; }).catch(()=>{ musicOn=false; musicToggle.textContent='🔈'; }); }
-
+    saveModalBtn.addEventListener('click', () => {
+        const text = modalInput.value.trim();
+        if (text) {
+            localStorage.setItem(currentModalKey, text);
+        } else {
+            localStorage.removeItem(currentModalKey); // Xóa nếu để trống
+        }
+        loadAndDisplayTexts();
+        modalOverlay.style.display = 'none';
     });
 
+    closeModalBtn.addEventListener('click', () => {
+        modalOverlay.style.display = 'none';
+    });
+
+    /* --- LOGIC MẬT MÃ BÍ MẬT --- */
+    checkPassBtn.addEventListener('click', () => {
+        const inputPass = secretPassInput.value.trim();
+        // Cho phép nhập 7/5/2025 hoặc 07/05/2025
+        if (inputPass === SECRET_PASSWORD || inputPass === '7/5/2025') {
+            passwordArea.style.display = 'none';
+            startHeart.style.display = 'flex';
+            introText.textContent = 'Bấm trái tim để mở thiệp';
+            passError.style.display = 'none';
+            // Khởi động animation pulse cho trái tim
+            startHeart.style.animation = 'pulse 1.5s infinite';
+            secretPassInput.blur(); 
+        } else {
+            passError.style.display = 'block';
+            setTimeout(() => passError.style.display = 'none', 3000);
+            secretPassInput.value = '';
+            secretPassInput.focus();
+        }
+    });
+
+    /* --- LOGIC CUỘN VÀ HIỆU ỨNG (CŨ) --- */
+    // Animate sections
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        } else {
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, { threshold: 0.38 });
+    document.querySelectorAll('.sections > section').forEach(s => observer.observe(s));
+
+    // Start heart click
+    startHeart.addEventListener('click', () => {
+      startHeart.style.transform = 'scale(1.06) rotate(-45deg)';
+      setTimeout(() => startHeart.style.transform = '', 220);
+      intro.classList.add('hidden');
+      main.classList.add('visible');
+      main.setAttribute('aria-hidden', 'false');
+      sectionsEl.scrollTop = 0;
+
+      displayRandomMemory(); // <--- GỌI TÍNH NĂNG MỚI
+
+      // Khởi động nhạc
+      audioEl.currentTime = 0;
+      audioEl.play().then(() => { musicOn = true; musicToggle.textContent = '🔊'; })
+        .catch(() => { musicOn = false; musicToggle.textContent = '🔈'; });
+    });
+
+    // Continue buttons scroll
+    document.querySelectorAll('.btn[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = Number(btn.getAttribute('data-next'));
+        const sections = document.querySelectorAll('.sections > section');
+        if (sections[idx]) sections[idx].scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Floating hearts
+    function createFloatingHearts(count = 20) {
+      for (let i = 0; i < count; i++) {
+        const f = document.createElement('div');
+        f.className = 'floating-heart';
+        f.textContent = '💖';
+        f.style.left = (6 + Math.random() * 88) + 'vw';
+        f.style.bottom = (-10 - Math.random() * 20) + 'px';
+        f.style.fontSize = (16 + Math.random() * 36) + 'px';
+        f.style.animationDuration = (1.5 + Math.random() * 1.6) + 's';
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 3800);
+      }
+    }
+    heartBtn.addEventListener('click', () => createFloatingHearts(22));
+
+    // Restart
+    restartBtn.addEventListener('click', () => {
+      audioEl.pause(); audioEl.currentTime = 0; musicOn = false; musicToggle.textContent = '🔈';
+      main.classList.remove('visible'); main.setAttribute('aria-hidden', 'true');
+      sectionsEl.scrollTop = 0;
+      intro.classList.remove('hidden');
+      
+      // Reset về trạng thái Mật mã
+      passwordArea.style.display = 'flex';
+      startHeart.style.display = 'none';
+      introText.textContent = 'Nhập mật mã để mở thiệp';
+      startHeart.style.animation = 'none'; // Tắt animation pulse
+      secretPassInput.value = ''; // Xóa mật mã đã nhập
+    });
+
+    // Music toggle
+    musicToggle.addEventListener('click', () => {
+      if (musicOn) { audioEl.pause(); musicOn = false; musicToggle.textContent = '🔈'; }
+      else {
+        audioEl.play().then(() => { musicOn = true; musicToggle.textContent = '🔊'; })
+          .catch(() => { musicOn = false; musicToggle.textContent = '🔈'; });
+      }
+    });
+
+    // Accessibility: Enter key
+    startHeart.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') startHeart.click(); });
+    secretPassInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkPassBtn.click(); });
 
 
-    // Khả năng truy cập: Phím Enter
-
-    startHeart.addEventListener('keydown', e=>{ nếu(e.key==='Nhập' || e.key===' ') startHeart.click(); });
-
-
-
-    // Tải trước hình ảnh
-
-    ['intro.jpg','photo.jpg','myphoto.jpg','mission.jpg','emotion.JPG','agree.jpg'].forEach(src=>{ const im=new Image(); im.src=src; });
-
+    // Preload images (Bao gồm các ảnh kỷ niệm giữ chỗ)
+    ['intro.jpg', 'photo.jpg', 'myphoto.jpg', 'mission.jpg', 'emotion.JPG', 'agree.jpg', 'background.jpg', 'memory1.jpg', 'memory2.jpg', 'memory3.jpg'].forEach(src => { const im = new Image(); im.src = src; });
   </script>
 
-
-
 </body>
-
-</html> 
+</html>
