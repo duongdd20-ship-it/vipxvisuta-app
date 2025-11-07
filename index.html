@@ -126,13 +126,13 @@
     <img id="introExtra" class="intro-extra" src="myphoto.jpg" alt="Hình của tôi" onerror="this.style.display='none'">
     
     <div id="password-area" style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:15px">
-        <input type="text" id="secretPass" placeholder="Đố em biết ngày đầu gặp mặt (DD/MM/YYYY)" style="padding:10px;border-radius:8px;border:none;text-align:center;font-size:1rem;color:#333;width:250px;">
-        <button id="checkPassBtn" class="btn" style="margin-top:0;padding:10px 20px;width:250px">Mở Khóa Thiệp</button>
+        <input type="text" id="secretPass" placeholder="Đố em biết ngày đầu đi chơi (DD/MM/YYYY)" style="padding:10px;border-radius:8px;border:none;text-align:center;font-size:1rem;color:#333;width:250px;">
+        <button id="checkPassBtn" class="btn" style="margin-top:0;padding:10px 20px;width:250px">Bính bong</button>
         <p id="passError" style="color:yellow;font-size:0.9rem;display:none;text-shadow:1px 1px 4px rgba(0,0,0,0.8);">Um Ùm UM Haizzz.</p>
     </div>
 
-    <button id="startHeart" class="start-heart" title="Bấm để bắt đầu" aria-pressed="false" style="display:none"><span>❤</span></button>
-    <div id="intro-text" style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Click để biết thế nào là Cade</div>
+    <button id="startHeart" class="start-heart" title="Chạm vào để tăng nhịp thở của VIP" aria-pressed="false" style="display:none"><span>❤</span></button>
+    <div id="intro-text" style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Sao mà nhớ ối giồi ôi</div>
   </div>
 
   <div id="main" class="main" aria-hidden="true">
@@ -229,13 +229,13 @@
         if (emotion) {
             document.getElementById('emotionText').textContent = emotion;
         } else {
-            document.getElementById('emotionText').textContent = '(Viết cảm xúc của bạn ở đây — Ví dụ: "Khi đọc, anh thấy tim rung...")';
+            document.getElementById('emotionText').textContent = 'Không biết phải diễn tả như thế nào, thật sự rất khó nói. Vào khoảng khắc anh nhận đc lời mời của em tuy người anh hơi thúi nhưng em vẫn không ngần ngại đưa mã qr cho anh quét, anh cảm thấy rất vui vì đây là lần đầu tiên anh nhận được một lời mời đi ăn đàng hoàng nhất từ trước tới giờ, anh hạnh phúc lắm công chúa bé nhỏ của Vip, Anh YÊU EM em Pi của anh <3';
         }
 
         if (wish) {
             document.getElementById('wishText').textContent = wish;
         } else {
-            document.getElementById('wishText').textContent = '(Viết lời chúc ở đây — Ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")';
+            document.getElementById('wishText').textContent = 'CHúc em pi của hiện tại và tương lai luôn yêu bản thân và yêu anh, không được bỏ bê nữa mà quên từ giờ có anh rồi (UỆ UỆ). Hẹn gặp em dưới ánh trăng . Peace and love ';
         }
     }
     loadAndDisplayTexts(); // Load ngay khi tải trang
