@@ -3,67 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lời mời đặc biệt 💌</title>
+  <title>Vipxvisuta App 💖</title>
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      color: white;
-      background-image: url('background.jpg'); /* ảnh nền */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { width: 100%; height: 100%; overflow: hidden; }
+
+    .container {
+      display: flex;
+      width: 300%;
+      height: 100vh;
+      transition: transform 1s ease-in-out;
+    }
+
+    section {
+      flex: 1;
+      height: 100vh;
       background-size: cover;
       background-position: center;
-      background-attachment: fixed;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 1.6em;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
     }
 
-    .section {
-      padding: 60px 20px;
-      background: rgba(0,0,0,0.6);
-      margin: 30px auto;
-      width: 90%;
-      max-width: 500px;
+    button {
+      margin-top: 20px;
+      padding: 10px 25px;
+      background-color: rgba(255,255,255,0.8);
+      border: none;
       border-radius: 20px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.3);
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .section img {
-      width: 200px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.4);
+    button:hover {
+      background-color: rgba(255,255,255,1);
+      transform: scale(1.05);
     }
+
+    /* Nền từng trang */
+    #page1 { background-image: url('mission.jpg'); }
+    #page2 { background-image: url('emotion.JPG'); }
+    #page3 { background-image: url('agree.jpg'); }
+
+    audio { display: none; }
   </style>
 </head>
 <body>
+  <div class="container" id="slider">
+    <section id="page1">
+      <h2>💌 Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.Lt</h2>
+      <p>Em hãy chuẩn bị sẵn một nụ cười thật tươi nhé...</p>
+      <button onclick="nextPage()">Qua mục kế tiếp ➡️</button>
+    </section>
 
-  <h1>💖 Lời Hồi Đáp Của VIP BUM 💖</h1>
+    <section id="page2">
+      <h2>💖 Cảm xúc gửi gắm</h2>
+      <p>Khi được nhận lời mời của em, anh thật sự rất bất ngờ và ngạc nhiên, pha một chút sự mắc cười, mắc cười vì sự dễ thương em dành cho anh. Tuy lúc đó anh hơi thúi nhẹ, nhưng em cũng rất vui vẻ gửi anh xem. Anh thật sự rất vui và có thể đêm nay anh không thể ngủ được hỡi Cade của anh. Có thể nói anh Tẽn nhưng đây là lần đầu tiên anh được nhân lời mời từ một cô gái <3. </p>
+      <button onclick="nextPage()">Tiếp tục ➡️</button>
+    </section>
 
-  <!-- Mục 1: Nhiệm vụ -->
-  <div class="section">
-    <img src="mission.jpg" alt="Nhiệm vụ">
-    <h2>Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L</h2>
-    <p>Anh đã nhận được nhiệm vụ đặc biệt từ em — buổi tối 14/11 🌙<br>
-    Và anh xin chính thức xác nhận: <b>Tham gia 100%</b> 🎯</p>
+    <section id="page3">
+      <h2>🎁 Lời đồng ý </h2>
+      <p>Yes I Do. Chắc chắn rồi anh sẽ cố gắng thực hiện nhiệm vụ thật tốt để không phụ lòng em hỡi cô gái bé nhỏ của em. Anh yêu em.</p>
+      <button onclick="restart()">Quay lại đầu ⬅️</button>
+    </section>
   </div>
 
-  <!-- Mục 2: Cảm xúc -->
-  <div class="section">
-    <img src="emotion.jpg" alt="Cảm xúc">
-    <h2>Cảm xúc của anh</h2>
-    <p>Khi được nhận lời mời của em, anh thật sự rất bất ngờ và ngạc nhiên, pha một chút sự mắc cười, mắc cười vì sự dễ thương em dành cho anh. Tuy lúc đó anh hơi thúi nhẹ, nhưng em cũng rất vui vẻ gửi anh xem. Anh thật sự rất vui và có thể đêm nay anh không thể ngủ được hỡi Cade của anh. Có thể nói anh Tẽn nhưng đây là lần đầu tiên anh được nhân lời mời từ một cô gái <3 </p>
-  </div>
-
-  <!-- Mục 3: Lời đồng ý -->
-  <div class="section">
-    <img src="agree.jpg" alt="Đồng ý">
-    <h2>💞 Anh đồng ý 💞</h2>
-    <p>Không chỉ là một buổi tối, mà là một khoảnh khắc đặc biệt giữa hai ta 💫</p>
-  </div>
-
-  <!-- Nhạc nền -->
   <audio autoplay loop>
     <source src="background_music.mp3" type="audio/mpeg">
   </audio>
 
+  <script>
+    let currentPage = 0;
+    function nextPage() {
+      currentPage++;
+      if (currentPage > 2) currentPage = 2;
+      document.getElementById("slider").style.transform = `translateX(-${currentPage * 100}%)`;
+    }
+
+    function restart() {
+      currentPage = 0;
+      document.getElementById("slider").style.transform = "translateX(0%)";
+    }
+  </script>
 </body>
 </html>
