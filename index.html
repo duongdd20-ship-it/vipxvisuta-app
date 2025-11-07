@@ -3,45 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dành cho người đặc biệt 💖</title>
+  <title>Lời mời đặc biệt 💌</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-      background-image: url('background.jpg');
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      color: white;
+      background-image: url('background.jpg'); /* ảnh nền */
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      color: #fff;
-      margin: 0;
-      padding: 0;
+      text-align: center;
     }
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.5);
-      min-height: 100vh;
-      padding: 20px;
+
+    .section {
+      padding: 60px 20px;
+      background: rgba(0,0,0,0.6);
+      margin: 30px auto;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(255,255,255,0.3);
     }
-    h1 { color: #ffb6c1; margin-top: 20px; }
-    .menu {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 20px 0;
+
+    .section img {
+      width: 200px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.4);
     }
-    button {
-      background-color: #ffb6c1;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.3s;
-      font-size: 16px;
-    }
-    button:hover { background-color: #ff69b4; color: white; }
-    .section { display: none; animation: fadeIn 0.6s; }
-    .active { display: block; }
-    img {
-      width: 250px;
-      border-radius: 15px;
-      margin-top: 10px;
-      box-shadow: 0 0 15px rgba(255,255,255,0.3)
+  </style>
+</head>
+<body>
+
+  <h1>💖 Lời Hồi Đáp Của VIP BUM 💖</h1>
+
+  <!-- Mục 1: Nhiệm vụ -->
+  <div class="section">
+    <img src="mission.jpg" alt="Nhiệm vụ">
+    <h2>Mã nhiệm vụ: I.M.D. S.P.E.C.I.A.L</h2>
+    <p>Anh đã nhận được nhiệm vụ đặc biệt từ em — buổi tối 14/11 🌙<br>
+    Và anh xin chính thức xác nhận: <b>Tham gia 100%</b> 🎯</p>
+  </div>
+
+  <!-- Mục 2: Cảm xúc -->
+  <div class="section">
+    <img src="emotion.jpg" alt="Cảm xúc">
+    <h2>Cảm xúc của anh</h2>
+    <p>Khi được nhận lời mời của em, anh thật sự rất bất ngờ và ngạc nhiên, pha một chút sự mắc cười, mắc cười vì sự dễ thương em dành cho anh. Tuy lúc đó anh hơi thúi nhẹ, nhưng em cũng rất vui vẻ gửi anh xem. Anh thật sự rất vui và có thể đêm nay anh không thể ngủ được hỡi Cade của anh. Có thể nói anh Tẽn nhưng đây là lần đầu tiên anh được nhân lời mời từ một cô gái <3 </p>
+  </div>
+
+  <!-- Mục 3: Lời đồng ý -->
+  <div class="section">
+    <img src="agree.jpg" alt="Đồng ý">
+    <h2>💞 Anh đồng ý 💞</h2>
+    <p>Không chỉ là một buổi tối, mà là một khoảnh khắc đặc biệt giữa hai ta 💫</p>
+  </div>
+
+  <!-- Nhạc nền -->
+  <audio autoplay loop>
+    <source src="background_music.mp3" type="audio/mpeg">
+  </audio>
+
+</body>
+</html>
