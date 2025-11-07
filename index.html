@@ -1,268 +1,327 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Vipxvisuta App 💖</title>
-  <style>
-    /* --- GLOBAL RESET & BASE --- */
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden} 
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Vipxvisuta App 💖</title>
+  <style>
+    /* --- GLOBAL RESET & BASE --- */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden}
 
-    /* --- INTRO overlay --- */
-    .intro{
-      position:fixed;inset:0;
-      background:url('intro.jpg') center/cover no-repeat;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:18px;z-index:40;transition:opacity 1.2s ease; 
-    }
-    .intro.hidden{opacity:0;pointer-events:none}
-    .intro-photo{width:220px;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-    .start-heart{
-      width:120px;height:120px;position:relative;cursor:pointer;
-      transform:rotate(-45deg);
-      background:radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
-      box-shadow:0 12px 30px rgba(255,90,140,0.35);
-      display:inline-block;outline:none;border:0;
-      display:flex;align-items:center;justify-content:center;
-    }
-    .start-heart::before,.start-heart::after{
-      content:"";position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
-      width:120px;height:120px;
-    }
-    .start-heart::before{top:-60px;left:0}
-    .start-heart::after{left:60px;top:0}
-    @keyframes pulse{0%{transform:scale(1) rotate(-45deg)}50%{transform:scale(1.08) rotate(-45deg)}100%{transform:scale(1) rotate(-45deg)}}
-    .start-heart{animation:pulse 1.5s infinite}
-    .start-heart > span{transform:rotate(45deg);font-size:40px;margin-left:6px}
+    /* --- INTRO overlay --- */
+    .intro{
+      position:fixed;inset:0;
+      background:url('intro.jpg') center/cover no-repeat;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:18px;z-index:40;transition:opacity 1.2s ease;
+    }
+    .intro.hidden{opacity:0;pointer-events:none}
+    .intro-photo{width:220px;height:140px;object-fit:cover;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    .start-heart{
+      width:120px;height:120px;position:relative;cursor:pointer;
+      transform:rotate(-45deg);
+      background:radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
+      box-shadow:0 12px 30px rgba(255,90,140,0.35);
+      display:inline-block;outline:none;border:0;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .start-heart::before,.start-heart::after{
+      content:"";position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%, #ff83a2, #ff2a66);
+      width:120px;height:120px;
+    }
+    .start-heart::before{top:-60px;left:0}
+    .start-heart::after{left:60px;top:0}
+    @keyframes pulse{0%{transform:scale(1) rotate(-45deg)}50%{transform:scale(1.08) rotate(-45deg)}100%{transform:scale(1) rotate(-45deg)}}
+    .start-heart{animation:pulse 1.5s infinite}
+    .start-heart > span{transform:rotate(45deg);font-size:40px;margin-left:6px}
 
-    /* --- MAIN content (No Scroll, Fade Transition) --- */
-    .main{position:relative;height:100vh;opacity:0;z-index:10;display:none; transition:opacity 1.2s ease} 
-    .main.visible{opacity:1; display: block;}
-    
-    .sections{
-      height:100vh;
-      position:relative;
-      overflow: hidden;
-    } 
-    
-    section{
-      position:absolute;inset:0;
-      min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;
-      background-size:cover;background-position:center;text-align:center;
-      
-      /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ */
-      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 0s 1.2s;
-      
-      /* TRẠNG THÁI ẨN TUYỆT ĐỐI */
-      opacity:0;
-      pointer-events:none;
-      visibility: hidden; /* <--- KỸ THUẬT QUAN TRỌNG NHẤT */
-      transform: scale(1.05);
-      z-index: 10;
-    }
-    
-    section.active{
-      /* visibility: visible phải được đặt trước opacity để transition hoạt động */
-      visibility: visible; 
-      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 0s 0s; /* <--- Xóa độ trễ */
-      opacity:1;
-      pointer-events:auto;
-      z-index:20;
-      transform: scale(1);
-    }
-    
-    h2{font-size:2.1rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.8)}
-    p{max-width:760px;font-size:1.05rem;line-height:1.6;text-shadow:1px 2px 10px rgba(0,0,0,0.7)}
-    .btn{
-      margin-top:20px;padding:12px 26px;border-radius:24px;border:0;
-      background:linear-gradient(135deg, #fff, #ffe9f2);
-      color:#222;font-weight:600;cursor:pointer;
-      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
-    }
-    .btn:hover{transform:translateY(-3px) scale(1.03);transition:all .25s cubic-bezier(0.1, 0.7, 1, 0.1);}
+    /* pressed feedback (use class, not inline style) */
+    .start-heart.pressed{animation:none; transform: scale(0.98) rotate(-45deg); transition:transform .18s ease;}
 
-    /* music toggle */
-    #music-toggle{position:fixed;top:18px;right:18px;z-index:60;background:rgba(255,255,255,0.92);border:0;border-radius:50%;width:46px;height:46px;font-size:18px;cursor:pointer}
+    /* focus for accessibility */
+    .start-heart:focus{outline:3px solid rgba(255,200,230,0.6); outline-offset:6px}
 
-    /* floating hearts (end effect) */
-    .floating-heart{position:fixed;font-size:28px;opacity:0;pointer-events:none;animation:floatUp 2.8s ease forwards}
-    @keyframes floatUp{0%{transform:translateY(40px) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-260px) scale(1.4);opacity:0}}
+    /* --- MAIN content (No Scroll, Fade Transition) --- */
+    .main{position:relative;height:100vh;opacity:0;z-index:10;display:none; transition:opacity 1.2s ease}
+    .main.visible{opacity:1; display:block;}
 
-    /* per-page backgrounds */
-    #s1{background-image:url('mission.jpg')}
-    #s2{background-image:url('emotion.JPG')}
-    #s3{background-image:url('agree.jpg')}
-    #s4{background-image:url('last_page.jpg')} 
-  </style>
+    .sections{
+      height:100vh;
+      position:relative;
+      overflow: hidden;
+    }
+
+    section{
+      position:absolute;inset:0;
+      min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;
+      background-size:cover;background-position:center;text-align:center;
+
+      /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ */
+      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 0s 1.2s;
+
+      /* TRẠNG THÁI ẨN TUYỆT ĐỐI */
+      opacity:0;
+      pointer-events:none;
+      visibility: hidden; /* <--- KỸ THUẬT QUAN TRỌNG NHẤT */
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    section.active{
+      /* visibility: visible phải được đặt trước opacity để transition hoạt động */
+      visibility: visible;
+      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 0s 0s; /* <--- Xóa độ trễ */
+      opacity:1;
+      pointer-events:auto;
+      z-index:20;
+      transform: scale(1);
+    }
+
+    h2{font-size:2.1rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.8)}
+    p{max-width:760px;font-size:1.05rem;line-height:1.6;text-shadow:1px 2px 10px rgba(0,0,0,0.7)}
+    .btn{
+      margin-top:20px;padding:12px 26px;border-radius:24px;border:0;
+      background:linear-gradient(135deg, #fff, #ffe9f2);
+      color:#222;font-weight:600;cursor:pointer;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
+    }
+    .btn:hover{transform:translateY(-3px) scale(1.03);transition:all .25s cubic-bezier(0.1, 0.7, 1, 0.1);}
+
+    /* music toggle */
+    #music-toggle{position:fixed;top:18px;right:18px;z-index:60;background:rgba(255,255,255,0.92);border:0;border-radius:50%;width:46px;height:46px;font-size:18px;cursor:pointer}
+
+    /* floating hearts (end effect) */
+    .floating-heart{position:fixed;font-size:28px;opacity:0;pointer-events:none;animation:floatUp 2.8s ease forwards}
+    @keyframes floatUp{0%{transform:translateY(40px) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-260px) scale(1.4);opacity:0}}
+
+    /* per-page backgrounds */
+    #s1{background-image:url('mission.jpg')}
+    #s2{background-image:url('emotion.JPG')}
+    #s3{background-image:url('agree.jpg')}
+    #s4{background-image:url('last_page.jpg')}
+  </style>
 </head>
 <body>
 
-    <audio id="bgAudio" preload="auto" loop>
-    <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
-  </audio>
+    <audio id="bgAudio" preload="auto" loop>
+    <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
+  </audio>
 
-    <button id="music-toggle" aria-label="nhac">🔈</button>
+    <button id="music-toggle" aria-label="bật/tắt nhạc" aria-pressed="false">🔈</button>
 
-    <div id="intro" class="intro" role="dialog" aria-label="Màn hình mở đầu">
-    <img id="introPhoto" class="intro-photo" src="photo.jpg" alt="Hình kỷ niệm" onerror="this.style.display='none'">
-    <button id="startHeart" class="start-heart" title="Bấm để bắt đầu" aria-pressed="false"><span>❤</span></button>
-    <div style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Bấm trái tim để mở thiệp</div>
-  </div>
+    <div id="intro" class="intro" role="dialog" aria-label="Màn hình mở đầu">
+    <img id="introPhoto" class="intro-photo" src="photo.jpg" alt="Hình kỷ niệm" onerror="this.style.display='none'">
+    <button id="startHeart" class="start-heart" title="Bấm để bắt đầu" aria-pressed="false" tabindex="0"><span>❤</span></button>
+    <div style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Bấm trái tim để mở thiệp</div>
+  </div>
 
-    <div id="main" class="main" aria-hidden="true">
-    <div class="sections" id="sections">
-            <section id="s1">
-        <h2>💌 Nhiệm vụ đặc biệt</h2>
-        <p>Mã nhiệm vụ: <strong>I.M.D. S.P.E.C.I.A.L</strong><br>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕</p>
-        <button class="btn" data-next-section>Tiếp tục</button>
-      </section>
+    <div id="main" class="main" aria-hidden="true">
+    <div class="sections" id="sections">
+            <section id="s1">
+        <h2>💌 Nhiệm vụ đặc biệt</h2>
+        <p>Mã nhiệm vụ: <strong>I.M.D. S.P.E.C.I.A.L</strong><br>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕</p>
+        <button class="btn" data-next-section>Tiếp tục</button>
+      </section>
 
-            <section id="s2">
-        <h2>🐱 Cảm xúc</h2>
-        <p>(Viết cảm xúc của bạn ở đây — ví dụ: "Khi đọc, anh thấy tim rung...")</p>
-        <button class="btn" data-next-section>Tiếp tục</button>
-      </section>
+            <section id="s2">
+        <h2>🐱 Cảm xúc</h2>
+        <p>(Viết cảm xúc của bạn ở đây — ví dụ: "Khi đọc, anh thấy tim rung...")</p>
+        <button class="btn" data-next-section>Tiếp tục</button>
+      </section>
 
-            <section id="s3">
-        <h2>🐍 Lời đồng ý</h2>
-        <p>Anh đồng ý nhé 💖 Hẹn em tối 14/11.</p>
-        <button class="btn" data-next-section>Tiếp tục</button>
-      </section>
+            <section id="s3">
+        <h2>🐍 Lời đồng ý</h2>
+        <p>Anh đồng ý nhé 💖 Hẹn em tối 14/11.</p>
+        <button class="btn" data-next-section>Tiếp tục</button>
+      </section>
 
-            <section id="s4">
-        <h2>🌹 Lời chúc & Kết</h2>
-        <p>(Viết lời chúc ở đây — ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
-          <button class="btn" id="heartBtn">💞 Gửi tim</button>
-          <button class="btn" id="restartBtn">🔁 Quay lại từ đầu</button>
-        </div>
-      </section>
-    </div>
-  </div>
+            <section id="s4">
+        <h2>🌹 Lời chúc & Kết</h2>
+        <p>(Viết lời chúc ở đây — ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px">
+          <button class="btn" id="heartBtn">💞 Gửi tim</button>
+          <button class="btn" id="restartBtn">🔁 Quay lại từ đầu</button>
+        </div>
+      </section>
+    </div>
+  </div>
 
-  <script>
-    // ELEMENTS
-    const intro = document.getElementById('intro');
-    const startHeart = document.getElementById('startHeart');
-    const main = document.getElementById('main');
-    const sections = document.querySelectorAll('.sections > section');
-    const audioEl = document.getElementById('bgAudio');
-    const musicToggle = document.getElementById('music-toggle');
-    const restartBtn = document.getElementById('restartBtn');
-    const heartBtn = document.getElementById('heartBtn');
-    
-    let currentSectionIndex = 0;
-    let musicOn = false;
+  <script>
+    // ELEMENTS
+    const intro = document.getElementById('intro');
+    const startHeart = document.getElementById('startHeart');
+    const main = document.getElementById('main');
+    const sections = Array.from(document.querySelectorAll('.sections > section'));
+    const audioEl = document.getElementById('bgAudio');
+    const musicToggle = document.getElementById('music-toggle');
+    const restartBtn = document.getElementById('restartBtn');
+    const heartBtn = document.getElementById('heartBtn');
 
-    // Function to show a specific section with smooth fade/scale transition
-    function showSection(newIndex) {
-      // 1. Ẩn trang cũ (nếu có)
-      if (sections[currentSectionIndex]) {
-        const oldSection = sections[currentSectionIndex];
-        oldSection.classList.remove('active');
-        // CSS đã đặt visibility: hidden sau 1.2s (thời gian transition)
-      }
+    let currentSectionIndex = 0;
+    let musicOn = false;
+    let opening = false; // guard to prevent double open
 
-      // 2. Hiển thị trang mới
-      const newSection = sections[newIndex];
-      // Đặt ngay lập tức visibility: visible để kích hoạt transition
-      newSection.style.visibility = 'visible'; 
-      newSection.classList.add('active');
+    // ensure initial state: hide all sections explicitly
+    sections.forEach(s => {
+      s.classList.remove('active');
+      s.style.visibility = 'hidden';
+    });
 
-      currentSectionIndex = newIndex;
-    }
+    // Function to show a specific section with smooth fade/scale transition
+    function showSection(newIndex) {
+      if (newIndex < 0 || newIndex >= sections.length) return;
 
-    // Start behavior: click heart -> open
-    startHeart.addEventListener('click', ()=>{
-      // small visual feedback
-      startHeart.style.transform = 'scale(1.06) rotate(-45deg)';
-      setTimeout(()=> startHeart.style.transform = '', 220);
+      // 1. Ẩn trang cũ (nếu có)
+      const oldSection = sections[currentSectionIndex];
+      if (oldSection) {
+        oldSection.classList.remove('active');
+        // visibility will become hidden after CSS transition delay
+      }
 
-      // 1. Ẩn Intro, Hiện Main
-      intro.classList.add('hidden');
-      
-      main.style.display = 'block'; 
-      setTimeout(() => {
-        main.classList.add('visible');
-        main.setAttribute('aria-hidden','false');
-      }, 50);
+      // 2. Hiển thị trang mới
+      const newSection = sections[newIndex];
+      if (newSection) {
+        // Ensure visibility is visible immediately to start transition
+        newSection.style.visibility = 'visible';
+        // Force reflow (helps ensure transition triggers reliably)
+        void newSection.offsetWidth;
+        newSection.classList.add('active');
+      }
 
-      // 2. Kích hoạt Trang 1 (Index 0) ngay sau khi Main hiện
-      showSection(0); 
+      currentSectionIndex = newIndex;
+    }
 
-      // 3. Play music (user gesture)
-      audioEl.currentTime = 0;
-      audioEl.play().then(()=> {
-        musicOn = true; musicToggle.textContent = '🔊';
-      }).catch(()=> { musicOn = false; musicToggle.textContent = '🔈'; });
-    });
+    // Start behavior: click heart -> open
+    startHeart.addEventListener('click', async ()=>{
+      if (opening) return;
+      opening = true;
 
-    // Btns "Tiếp tục" switch to next section
-    document.querySelectorAll('.btn[data-next-section]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        if (currentSectionIndex < sections.length - 1) {
-          showSection(currentSectionIndex + 1);
-        }
-      });
-    });
+      // visual feedback via class
+      startHeart.classList.add('pressed');
+      setTimeout(()=> startHeart.classList.remove('pressed'), 220);
 
-    // Heart effect at end
-    function createFloatingHearts(count=22){
-      for(let i=0;i<count;i++){
-        const f = document.createElement('div');
-        f.className = 'floating-heart';
-        f.textContent = '💖';
-        f.style.left = (6 + Math.random()*88) + 'vw';
-        f.style.bottom = (-10 - Math.random()*20) + 'px';
-        f.style.fontSize = (16 + Math.random()*36) + 'px';
-        f.style.animationDuration = (1.5 + Math.random()*1.6) + 's';
-        document.body.appendChild(f);
-        setTimeout(()=> f.remove(), 3800);
-      }
-    }
+      // 1. Ẩn Intro, Hiện Main
+      intro.classList.add('hidden');
 
-    heartBtn.addEventListener('click', ()=> createFloatingHearts(22));
+      main.style.display = 'block';
+      setTimeout(() => {
+        main.classList.add('visible');
+        main.setAttribute('aria-hidden','false');
+      }, 50);
 
-    // Restart: go back to intro exactly like first-open
-    restartBtn.addEventListener('click', ()=>{
-      audioEl.pause(); audioEl.currentTime = 0; musicOn = false; musicToggle.textContent='🔈';
-      
-      // Tắt hiệu ứng và ẩn nội dung
-      main.classList.remove('visible'); 
-      main.setAttribute('aria-hidden','true');
-      
-      sections[currentSectionIndex].classList.remove('active'); 
-      sections[currentSectionIndex].style.visibility = 'hidden'; // Ẩn trang hiện tại
-      currentSectionIndex = 0; 
-      
-      setTimeout(() => {
-        main.style.display = 'none';
-        intro.classList.remove('hidden');
-      }, 1200);
+      // 2. Kích hoạt Trang 1 (Index 0) ngay sau khi Main hiện
+      showSection(0);
 
-      // Đảm bảo reset transition cho section mới
-      sections.forEach(s => s.style.transition = 'none');
-      setTimeout(() => {
-        sections.forEach(s => s.style.transition = '');
-      }, 50);
-    });
+      // 3. Play music (user gesture)
+      try {
+        audioEl.currentTime = 0;
+        await audioEl.play();
+        musicOn = true;
+        musicToggle.textContent = '🔊';
+        musicToggle.setAttribute('aria-pressed','true');
+      } catch (err) {
+        // trình duyệt chặn autoplay => vẫn OK, user có thể bật nhạc
+        musicOn = false;
+        musicToggle.textContent = '🔈';
+        musicToggle.setAttribute('aria-pressed','false');
+      } finally {
+        opening = false;
+      }
+    });
 
-    // Music toggle
-    musicToggle.addEventListener('click', ()=>{
-      if(musicOn){
-        audioEl.pause(); musicOn=false; musicToggle.textContent='🔈';
-      } else {
-        audioEl.play().then(()=>{ musicOn=true; musicToggle.textContent='🔊'; }).catch(()=>{ musicOn=false; musicToggle.textContent='🔈'; });
-      }
-    });
+    // Allow Enter/Space on startHeart
+    startHeart.addEventListener('keydown', (e)=> {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        startHeart.click();
+      }
+    });
 
-    // Accessibility (Enter to open)
-    startHeart.addEventListener('keydown', (e)=> { if(e.key==='Enter' || e.key===' ') startHeart.click(); });
+    // Btns "Tiếp tục" switch to next section
+    document.querySelectorAll('.btn[data-next-section]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        if (currentSectionIndex < sections.length - 1) {
+          showSection(currentSectionIndex + 1);
+        }
+      });
+    });
 
-    // Preload images 
-    const imgs = ['intro.jpg','photo.jpg','mission.jpg','emotion.JPG','agree.jpg','last_page.jpg'];
-    imgs.forEach(src=> { const im=new Image(); im.src=src; });
-  </script>
+    // Heart effect at end
+    function createFloatingHearts(count=22){
+      for(let i=0;i<count;i++){
+        const f = document.createElement('div');
+        f.className = 'floating-heart';
+        f.textContent = '💖';
+        f.style.left = (6 + Math.random()*88) + 'vw';
+        f.style.bottom = (-10 - Math.random()*20) + 'px';
+        f.style.fontSize = (16 + Math.random()*36) + 'px';
+        f.style.animationDuration = (1.5 + Math.random()*1.6) + 's';
+        document.body.appendChild(f);
+        setTimeout(()=> f.remove(), 3800);
+      }
+    }
+
+    heartBtn.addEventListener('click', ()=> createFloatingHearts(22));
+
+    // Restart: go back to intro exactly like first-open
+    restartBtn.addEventListener('click', ()=>{
+      // pause audio
+      try { audioEl.pause(); } catch(e){}
+      try { audioEl.currentTime = 0; } catch(e){}
+      musicOn = false;
+      musicToggle.textContent='🔈';
+      musicToggle.setAttribute('aria-pressed','false');
+
+      // Tắt hiệu ứng và ẩn nội dung
+      main.classList.remove('visible');
+      main.setAttribute('aria-hidden','true');
+
+      // Reset all sections to hidden and remove active class
+      sections.forEach(s => {
+        s.classList.remove('active');
+        s.style.visibility = 'hidden';
+      });
+      currentSectionIndex = 0;
+
+      // nhỏ: tránh xung đột transition -> đảm bảo hiển thị intro sau transition
+      setTimeout(() => {
+        main.style.display = 'none';
+        intro.classList.remove('hidden');
+      }, 1200);
+    });
+
+    // Music toggle
+    musicToggle.addEventListener('click', async ()=>{
+      if(musicOn){
+        audioEl.pause();
+        musicOn=false;
+        musicToggle.textContent='🔈';
+        musicToggle.setAttribute('aria-pressed','false');
+      } else {
+        try {
+          await audioEl.play();
+          musicOn=true;
+          musicToggle.textContent='🔊';
+          musicToggle.setAttribute('aria-pressed','true');
+        } catch(e) {
+          musicOn=false;
+          musicToggle.textContent='🔈';
+          musicToggle.setAttribute('aria-pressed','false');
+        }
+      }
+    });
+
+    // Preload images (best-effort)
+    const imgs = ['intro.jpg','photo.jpg','mission.jpg','emotion.JPG','agree.jpg','last_page.jpg'];
+    imgs.forEach(src=> { const im=new Image(); im.src=src; });
+
+    // On load: ensure musicToggle state reflects audio paused
+    window.addEventListener('load', ()=>{
+      musicOn = false;
+      musicToggle.textContent = '🔈';
+      musicToggle.setAttribute('aria-pressed','false');
+    });
+  </script>
 </body>
 </html>
