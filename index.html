@@ -7,7 +7,6 @@
   <style>
     /* --- GLOBAL RESET & BASE --- */
     *{box-sizing:border-box;margin:0;padding:0}
-    /* CHẶN CUỘN TOÀN BỘ (Tuyệt đối) */
     html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden} 
 
     /* --- INTRO overlay --- */
@@ -38,14 +37,14 @@
     .start-heart > span{transform:rotate(45deg);font-size:40px;margin-left:6px}
 
     /* --- MAIN content (No Scroll, Fade Transition) --- */
-    .main{position:relative;height:100vh;opacity:0;transition:opacity 1.2s ease;z-index:10;display:block}
-    /* Đảm bảo main khi hiện ra có opacity 1 */
-    .main.visible{opacity:1}
+    /* Ẩn toàn bộ nội dung chính bằng display:none lúc đầu */
+    .main{position:relative;height:100vh;opacity:0;z-index:10;display:none; transition:opacity 1.2s ease} 
+    .main.visible{opacity:1; display: block;} /* Chỉ hiện khi có class visible */
     
     .sections{
       height:100vh;
       position:relative;
-      overflow: hidden; /* CHẶN CUỘN NỘI DUNG */
+      overflow: hidden;
     } 
     
     section{
@@ -56,18 +55,17 @@
       /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ */
       transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
       
-      /* Trạng thái ẩn ban đầu */
+      /* TRẠNG THÁI ẨN CỦA SECTION */
       opacity:0;
       pointer-events:none;
-      transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi hiện ra */
-      z-index: 10; /* Đảm bảo các section nằm trên nhau */
+      transform: scale(1.05);
     }
     
     section.active{
       opacity:1;
       pointer-events:auto;
-      z-index:20; /* Section hoạt động phải nằm trên */
-      transform: scale(1); /* Trở về kích thước ban đầu */
+      z-index:20;
+      transform: scale(1);
     }
     
     h2{font-size:2.1rem;margin-bottom:12px;text-shadow:2px 4px 18px rgba(0,0,0,0.8)}
@@ -155,13 +153,10 @@
 
     // Function to show a specific section with smooth fade/scale transition
     function showSection(index) {
-      // Chỉ cần thao tác với section hiện tại và section mới
       sections.forEach((s, i) => {
         if (i === index) {
-          // Section mới: Thêm class 'active'
           s.classList.add('active');
         } else {
-          // Section cũ: Loại bỏ class 'active'
           s.classList.remove('active');
         }
       });
@@ -176,9 +171,15 @@
 
       // 1. Ẩn Intro, Hiện Main
       intro.classList.add('hidden');
-      main.classList.add('visible');
-      main.setAttribute('aria-hidden','false');
       
+      // Đảm bảo main hiện ra (chuyển từ display:none sang display:block)
+      main.style.display = 'block'; 
+      // Sau đó kích hoạt transition opacity
+      setTimeout(() => {
+        main.classList.add('visible');
+        main.setAttribute('aria-hidden','false');
+      }, 50);
+
       // 2. Kích hoạt Trang 1 (Index 0) ngay sau khi Main hiện
       showSection(0); 
 
@@ -218,11 +219,21 @@
     // Restart: go back to intro exactly like first-open
     restartBtn.addEventListener('click', ()=>{
       audioEl.pause(); audioEl.currentTime = 0; musicOn = false; musicToggle.textContent='🔈';
-      main.classList.remove('visible'); main.setAttribute('aria-hidden','true');
+      
+      // Tắt hiệu ứng và ẩn nội dung
+      main.classList.remove('visible'); 
+      main.setAttribute('aria-hidden','true');
+      
       sections[currentSectionIndex].classList.remove('active'); 
       currentSectionIndex = 0; 
-      intro.classList.remove('hidden');
-      // Reset hiệu ứng chuyển cảnh sau khi restart
+      
+      // Chờ 1.2s cho hiệu ứng opacity hoàn thành rồi mới ẩn display
+      setTimeout(() => {
+        main.style.display = 'none';
+        intro.classList.remove('hidden');
+      }, 1200);
+
+      // Reset transition để tránh lỗi khi restart
       sections.forEach(s => s.style.transition = 'none');
       setTimeout(() => {
         sections.forEach(s => s.style.transition = '');
