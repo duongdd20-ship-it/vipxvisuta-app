@@ -7,7 +7,8 @@
   <style>
     /* --- GLOBAL RESET & BASE --- */
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden} /* CHẶN CUỘN TOÀN BỘ */
+    /* CHẶN CUỘN TOÀN BỘ (Tuyệt đối) */
+    html,body{height:100%;font-family:Segoe UI, Roboto, sans-serif;background:#000;color:#fff;overflow:hidden} 
 
     /* --- INTRO overlay --- */
     .intro{
@@ -38,6 +39,7 @@
 
     /* --- MAIN content (No Scroll, Fade Transition) --- */
     .main{position:relative;height:100vh;opacity:0;transition:opacity 1.2s ease;z-index:10;display:block}
+    /* Đảm bảo main khi hiện ra có opacity 1 */
     .main.visible{opacity:1}
     
     .sections{
@@ -51,18 +53,20 @@
       min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;
       background-size:cover;background-position:center;text-align:center;
       
-      /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ, KÉO DÀI 1.2s */
+      /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ */
       transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
       
+      /* Trạng thái ẩn ban đầu */
       opacity:0;
       pointer-events:none;
       transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi hiện ra */
+      z-index: 10; /* Đảm bảo các section nằm trên nhau */
     }
     
     section.active{
       opacity:1;
       pointer-events:auto;
-      z-index:20;
+      z-index:20; /* Section hoạt động phải nằm trên */
       transform: scale(1); /* Trở về kích thước ban đầu */
     }
     
@@ -151,31 +155,34 @@
 
     // Function to show a specific section with smooth fade/scale transition
     function showSection(index) {
+      // Chỉ cần thao tác với section hiện tại và section mới
       sections.forEach((s, i) => {
         if (i === index) {
+          // Section mới: Thêm class 'active'
           s.classList.add('active');
         } else {
+          // Section cũ: Loại bỏ class 'active'
           s.classList.remove('active');
         }
       });
       currentSectionIndex = index;
     }
-
+    
     // Start behavior: click heart -> open
     startHeart.addEventListener('click', ()=>{
       // small visual feedback
       startHeart.style.transform = 'scale(1.06) rotate(-45deg)';
       setTimeout(()=> startHeart.style.transform = '', 220);
 
-      // hide intro, show main (slow fade-out/fade-in)
+      // 1. Ẩn Intro, Hiện Main
       intro.classList.add('hidden');
       main.classList.add('visible');
       main.setAttribute('aria-hidden','false');
       
-      // **QUAN TRỌNG:** Kích hoạt Trang 1 ngay sau khi Intro ẩn
+      // 2. Kích hoạt Trang 1 (Index 0) ngay sau khi Main hiện
       showSection(0); 
 
-      // play music (user gesture)
+      // 3. Play music (user gesture)
       audioEl.currentTime = 0;
       audioEl.play().then(()=> {
         musicOn = true; musicToggle.textContent = '🔊';
