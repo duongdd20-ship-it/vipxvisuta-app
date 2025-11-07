@@ -77,20 +77,17 @@
     #s1{background-image:url('mission.jpg')}
     #s2{background-image:url('emotion.JPG')}
     #s3{background-image:url('agree.jpg')}
-    #s4{background-image:url('photo.jpg')}
+    #s4{background-image:url('background.jpg')} 
   </style>
 </head>
 <body>
 
-  <!-- audio -->
   <audio id="bgAudio" preload="auto" loop>
     <source src="https://github.com/duongdd20-ship-it/vipxvisuta-app/raw/refs/heads/main/background_music.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- music toggle -->
   <button id="music-toggle" aria-label="nhac">🔈</button>
 
-  <!-- INTRO overlay -->
   <div id="intro" class="intro" role="dialog" aria-label="Màn hình mở đầu">
     <img id="introPhoto" class="intro-photo" src="photo.jpg" alt="Hình kỷ niệm" onerror="this.style.display='none'">
     <img id="introExtra" class="intro-extra" src="myphoto.jpg" alt="Hình của tôi" onerror="this.style.display='none'">
@@ -98,31 +95,26 @@
     <div style="margin-top:14px;font-size:1.05rem;text-shadow:1px 1px 8px rgba(0,0,0,0.6)">Bấm trái tim để mở thiệp</div>
   </div>
 
-  <!-- MAIN content -->
   <div id="main" class="main" aria-hidden="true">
     <div class="sections" id="sections">
-      <!-- Section 1 -->
       <section id="s1">
         <h2>💌 Nhiệm vụ đặc biệt</h2>
         <p>Mã nhiệm vụ: <strong>I.M.D. S.P.E.C.I.A.L</strong><br>Hoàn thành nhiệm vụ: cùng anh đi ăn tối ngày 14/11 nhé 💕</p>
         <button class="btn" data-next="1">Tiếp tục</button>
       </section>
 
-      <!-- Section 2 -->
       <section id="s2">
         <h2>🐱 Cảm xúc</h2>
         <p>(Viết cảm xúc của bạn ở đây — ví dụ: "Khi đọc, anh thấy tim rung...")</p>
         <button class="btn" data-next="2">Tiếp tục</button>
       </section>
 
-      <!-- Section 3 -->
       <section id="s3">
         <h2>🐍 Lời đồng ý</h2>
         <p>Anh đồng ý nhé 💖 Hẹn em tối 14/11.</p>
         <button class="btn" data-next="3">Tiếp tục</button>
       </section>
 
-      <!-- Section 4 -->
       <section id="s4">
         <h2>🌹 Lời chúc & Kết</h2>
         <p>(Viết lời chúc ở đây — ví dụ: "Chúc em luôn khỏe, vui và hạnh phúc")</p>
@@ -218,7 +210,7 @@
     startHeart.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') startHeart.click(); });
 
     // Preload images
-    ['intro.jpg','photo.jpg','myphoto.jpg','mission.jpg','emotion.JPG','agree.jpg'].forEach(src=>{ const im=new Image(); im.src=src; });
+    ['intro.jpg','photo.jpg','myphoto.jpg','mission.jpg','emotion.JPG','agree.jpg', 'background.jpg'].forEach(src=>{ const im=new Image(); im.src=src; });
   </script>
 
 </body>
