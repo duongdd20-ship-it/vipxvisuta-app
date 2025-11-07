@@ -37,9 +37,8 @@
     .start-heart > span{transform:rotate(45deg);font-size:40px;margin-left:6px}
 
     /* --- MAIN content (No Scroll, Fade Transition) --- */
-    /* Ẩn toàn bộ nội dung chính bằng display:none lúc đầu */
     .main{position:relative;height:100vh;opacity:0;z-index:10;display:none; transition:opacity 1.2s ease} 
-    .main.visible{opacity:1; display: block;} /* Chỉ hiện khi có class visible */
+    .main.visible{opacity:1; display: block;}
     
     .sections{
       height:100vh;
@@ -53,15 +52,20 @@
       background-size:cover;background-position:center;text-align:center;
       
       /* HIỆU ỨNG CHUYỂN TRANG MƯỢT MÀ */
-      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 0s 1.2s;
       
-      /* TRẠNG THÁI ẨN CỦA SECTION */
+      /* TRẠNG THÁI ẨN TUYỆT ĐỐI */
       opacity:0;
       pointer-events:none;
+      visibility: hidden; /* <--- KỸ THUẬT QUAN TRỌNG NHẤT */
       transform: scale(1.05);
+      z-index: 10;
     }
     
     section.active{
+      /* visibility: visible phải được đặt trước opacity để transition hoạt động */
+      visibility: visible; 
+      transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1), transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), visibility 0s 0s; /* <--- Xóa độ trễ */
       opacity:1;
       pointer-events:auto;
       z-index:20;
@@ -152,17 +156,23 @@
     let musicOn = false;
 
     // Function to show a specific section with smooth fade/scale transition
-    function showSection(index) {
-      sections.forEach((s, i) => {
-        if (i === index) {
-          s.classList.add('active');
-        } else {
-          s.classList.remove('active');
-        }
-      });
-      currentSectionIndex = index;
+    function showSection(newIndex) {
+      // 1. Ẩn trang cũ (nếu có)
+      if (sections[currentSectionIndex]) {
+        const oldSection = sections[currentSectionIndex];
+        oldSection.classList.remove('active');
+        // CSS đã đặt visibility: hidden sau 1.2s (thời gian transition)
+      }
+
+      // 2. Hiển thị trang mới
+      const newSection = sections[newIndex];
+      // Đặt ngay lập tức visibility: visible để kích hoạt transition
+      newSection.style.visibility = 'visible'; 
+      newSection.classList.add('active');
+
+      currentSectionIndex = newIndex;
     }
-    
+
     // Start behavior: click heart -> open
     startHeart.addEventListener('click', ()=>{
       // small visual feedback
@@ -172,9 +182,7 @@
       // 1. Ẩn Intro, Hiện Main
       intro.classList.add('hidden');
       
-      // Đảm bảo main hiện ra (chuyển từ display:none sang display:block)
       main.style.display = 'block'; 
-      // Sau đó kích hoạt transition opacity
       setTimeout(() => {
         main.classList.add('visible');
         main.setAttribute('aria-hidden','false');
@@ -225,15 +233,15 @@
       main.setAttribute('aria-hidden','true');
       
       sections[currentSectionIndex].classList.remove('active'); 
+      sections[currentSectionIndex].style.visibility = 'hidden'; // Ẩn trang hiện tại
       currentSectionIndex = 0; 
       
-      // Chờ 1.2s cho hiệu ứng opacity hoàn thành rồi mới ẩn display
       setTimeout(() => {
         main.style.display = 'none';
         intro.classList.remove('hidden');
       }, 1200);
 
-      // Reset transition để tránh lỗi khi restart
+      // Đảm bảo reset transition cho section mới
       sections.forEach(s => s.style.transition = 'none');
       setTimeout(() => {
         sections.forEach(s => s.style.transition = '');
